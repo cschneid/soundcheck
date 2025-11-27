@@ -2,6 +2,12 @@
 
 Music quiz app for bar trivia practice. Users pick a Spotify playlist, listen to random song snippets, and guess the artist/title. Frontend-only, requires Spotify Premium.
 
+## Development Rules
+
+**Current date**: November 2025. Use this when searching for docs/solutions.
+
+**Proactive error research**: When encountering errors during init, library setup, or API calls, immediately web search for current docs/solutions. APIs and CLI commands change frequently - don't assume knowledge cutoff info is accurate. Search before guessing.
+
 ## Stack
 - React + TypeScript + Vite
 - Tailwind CSS
