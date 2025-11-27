@@ -8,7 +8,7 @@
 | 002 | Testing Infrastructure | ✅ | 6a3265e |
 | 003 | Spotify Types & API Client | ✅ | e8d17e6 |
 | 004 | Spotify OAuth | ✅ | 94ec298 |
-| 005 | Premium Check | ⬜ | |
+| 005 | Premium Check | ✅ | 6316240 |
 | 006 | Fetch User Playlists | ⬜ | |
 | 007 | Playlist ID Input | ⬜ | |
 | 008 | Fetch Playlist Tracks | ⬜ | |
