@@ -4,7 +4,7 @@
 
 | # | Ticket | Status | Commit |
 |---|--------|--------|--------|
-| 001 | Project Setup | ⬜ | |
+| 001 | Project Setup | ✅ | 6f89f1e |
 | 002 | Testing Infrastructure | ⬜ | |
 | 003 | Spotify Types & API Client | ⬜ | |
 | 004 | Spotify OAuth | ⬜ | |
