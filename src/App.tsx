@@ -1,8 +1,13 @@
 import { useAuth } from './hooks/useAuth'
+import { usePremiumCheck } from './hooks/usePremiumCheck'
 import { LoginButton } from './components/LoginButton'
+import { PremiumRequired } from './components/PremiumRequired'
 
 function App() {
-  const { isAuthenticated, isLoading, login, logout } = useAuth()
+  const { isAuthenticated, accessToken, isLoading: authLoading, login, logout } = useAuth()
+  const { isLoading: premiumLoading, isPremium, user } = usePremiumCheck(accessToken)
+
+  const isLoading = authLoading || (isAuthenticated && premiumLoading)
 
   if (isLoading) {
     return (
@@ -28,13 +33,20 @@ function App() {
     )
   }
 
+  if (!isPremium) {
+    return <PremiumRequired onLogout={logout} />
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
         <h1 className="text-4xl font-bold text-green-500 mb-4">
           Spotify Trainer
         </h1>
-        <p className="text-gray-400 mb-8">You're logged in!</p>
+        <p className="text-gray-400 mb-4">
+          Welcome{user?.display_name ? `, ${user.display_name}` : ''}!
+        </p>
+        <p className="text-gray-500 text-sm mb-8">Premium account verified</p>
         <button
           onClick={logout}
           className="text-gray-400 hover:text-white underline"

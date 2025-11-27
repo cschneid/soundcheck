@@ -1,11 +1,11 @@
-import {
+import type {
   SpotifyUser,
   SpotifyPlaylist,
   SpotifyTrack,
   SpotifyPlaylistTracksResponse,
   SpotifyPlaylistsResponse,
-  SpotifyError,
 } from '../types/spotify'
+import { SpotifyError } from '../types/spotify'
 
 const SPOTIFY_API_BASE = 'https://api.spotify.com/v1'
 

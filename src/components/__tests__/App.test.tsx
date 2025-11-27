@@ -7,12 +7,26 @@ vi.mock('../../hooks/useAuth', () => ({
   useAuth: vi.fn(),
 }))
 
+// Mock usePremiumCheck hook
+vi.mock('../../hooks/usePremiumCheck', () => ({
+  usePremiumCheck: vi.fn(),
+}))
+
 import { useAuth } from '../../hooks/useAuth'
+import { usePremiumCheck } from '../../hooks/usePremiumCheck'
 const mockUseAuth = vi.mocked(useAuth)
+const mockUsePremiumCheck = vi.mocked(usePremiumCheck)
 
 describe('App', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // Default premium check mock
+    mockUsePremiumCheck.mockReturnValue({
+      isLoading: false,
+      isPremium: true,
+      user: { id: 'user1', display_name: 'Test User', product: 'premium', images: [] },
+      error: null,
+    })
   })
 
   it('shows loading state', () => {
@@ -43,7 +57,7 @@ describe('App', () => {
     expect(screen.getByText('Login with Spotify')).toBeInTheDocument()
   })
 
-  it('shows logout when authenticated', () => {
+  it('shows welcome when authenticated with premium', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: true,
       accessToken: 'test-token',
@@ -54,8 +68,29 @@ describe('App', () => {
     })
 
     render(<App />)
-    expect(screen.getByText("You're logged in!")).toBeInTheDocument()
+    expect(screen.getByText('Welcome, Test User!')).toBeInTheDocument()
+    expect(screen.getByText('Premium account verified')).toBeInTheDocument()
     expect(screen.getByText('Logout')).toBeInTheDocument()
+  })
+
+  it('shows premium required when authenticated without premium', () => {
+    mockUseAuth.mockReturnValue({
+      isAuthenticated: true,
+      accessToken: 'test-token',
+      expiresAt: Date.now() + 3600000,
+      isLoading: false,
+      login: vi.fn(),
+      logout: vi.fn(),
+    })
+    mockUsePremiumCheck.mockReturnValue({
+      isLoading: false,
+      isPremium: false,
+      user: { id: 'user1', display_name: 'Free User', product: 'free', images: [] },
+      error: null,
+    })
+
+    render(<App />)
+    expect(screen.getByText('Spotify Premium Required')).toBeInTheDocument()
   })
 
   it('calls login when login button clicked', async () => {
