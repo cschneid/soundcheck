@@ -6,7 +6,7 @@
 |---|--------|--------|--------|
 | 001 | Project Setup | ✅ | 6f89f1e |
 | 002 | Testing Infrastructure | ✅ | 6a3265e |
-| 003 | Spotify Types & API Client | ⬜ | |
+| 003 | Spotify Types & API Client | ✅ | e8d17e6 |
 | 004 | Spotify OAuth | ⬜ | |
 | 005 | Premium Check | ⬜ | |
 | 006 | Fetch User Playlists | ⬜ | |
