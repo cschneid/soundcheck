@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import {
-  getAuthUrl,
   parseAuthCallback,
   storeAuth,
   getStoredAuth,
@@ -13,55 +12,25 @@ describe('auth utilities', () => {
     sessionStorage.clear()
   })
 
-  describe('getAuthUrl', () => {
-    it('constructs correct URL structure', () => {
-      const url = getAuthUrl()
-      expect(url).toContain('https://accounts.spotify.com/authorize')
-      expect(url).toContain('client_id=')
-    })
-
-    it('includes all required scopes', () => {
-      const url = getAuthUrl()
-      expect(url).toContain('user-read-private')
-      expect(url).toContain('streaming')
-      expect(url).toContain('playlist-read-private')
-    })
-
-    it('includes redirect URI parameter', () => {
-      const url = getAuthUrl()
-      expect(url).toContain('redirect_uri=')
-    })
-
-    it('uses implicit grant (token response type)', () => {
-      const url = getAuthUrl()
-      expect(url).toContain('response_type=token')
-    })
-  })
-
   describe('parseAuthCallback', () => {
-    it('extracts token from hash', () => {
-      const hash = '#access_token=abc123&token_type=Bearer&expires_in=3600'
-      const result = parseAuthCallback(hash)
-
-      expect(result).toEqual({
-        accessToken: 'abc123',
-        expiresIn: 3600,
-      })
+    it('extracts code from search params', () => {
+      const search = '?code=abc123'
+      const result = parseAuthCallback(search)
+      expect(result).toBe('abc123')
     })
 
-    it('returns null for empty hash', () => {
+    it('returns null for empty search', () => {
       expect(parseAuthCallback('')).toBeNull()
-      expect(parseAuthCallback('#')).toBeNull()
     })
 
-    it('returns null for missing token', () => {
-      const hash = '#expires_in=3600'
-      expect(parseAuthCallback(hash)).toBeNull()
+    it('returns null when error present', () => {
+      const search = '?error=access_denied'
+      expect(parseAuthCallback(search)).toBeNull()
     })
 
-    it('returns null for missing expires_in', () => {
-      const hash = '#access_token=abc123'
-      expect(parseAuthCallback(hash)).toBeNull()
+    it('returns null when no code', () => {
+      const search = '?state=123'
+      expect(parseAuthCallback(search)).toBeNull()
     })
   })
 
@@ -79,7 +48,6 @@ describe('auth utilities', () => {
     })
 
     it('returns null for expired token', () => {
-      // Store token that expires in the past
       const expiredAuth = {
         accessToken: 'old-token',
         expiresAt: Date.now() - 1000,
@@ -117,7 +85,7 @@ describe('auth utilities', () => {
     })
 
     it('returns true within 60 second buffer', () => {
-      const almostExpired = Date.now() + 30000 // 30 seconds
+      const almostExpired = Date.now() + 30000
       expect(isExpired(almostExpired)).toBe(true)
     })
   })
