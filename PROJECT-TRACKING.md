@@ -1,0 +1,39 @@
+# Project Tracking
+
+## Ticket Status
+
+| # | Ticket | Status | Commit |
+|---|--------|--------|--------|
+| 001 | Project Setup | ⬜ | |
+| 002 | Testing Infrastructure | ⬜ | |
+| 003 | Spotify Types & API Client | ⬜ | |
+| 004 | Spotify OAuth | ⬜ | |
+| 005 | Premium Check | ⬜ | |
+| 006 | Fetch User Playlists | ⬜ | |
+| 007 | Playlist ID Input | ⬜ | |
+| 008 | Fetch Playlist Tracks | ⬜ | |
+| 009 | Game State Management | ⬜ | |
+| 010 | Game Settings UI | ⬜ | |
+| 011 | Spotify Player SDK | ⬜ | |
+| 012 | Snippet Playback | ⬜ | |
+| 013 | Fuzzy Matching | ⬜ | |
+| 014 | Answer Input UI | ⬜ | |
+| 015 | Answer Scoring | ⬜ | |
+| 016 | Result Feedback UI | ⬜ | |
+| 017 | Game Round UI | ⬜ | |
+| 018 | End Screen | ⬜ | |
+| 019 | Main App Flow | ⬜ | |
+| 020 | Polish & Styling | ⬜ | |
+| 021 | Error Handling | ⬜ | |
+| 022 | Deployment | ⬜ | |
+
+**Legend:** ⬜ Todo | 🔄 In Progress | ✅ Done
+
+## Workflow
+
+1. Read ticket from `docs/tickets/XXX_*.md`
+2. Implement with tests
+3. Verify manually + Chrome DevTools MCP for UI tickets
+4. Run `npm test` (once testing infra exists)
+5. Commit: `git commit -m "[XXX] description"`
+6. Update this file: change ⬜ → ✅, add commit hash
