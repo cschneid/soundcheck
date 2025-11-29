@@ -4,7 +4,7 @@ import { usePremiumCheck } from './hooks/usePremiumCheck'
 import { usePlaylists } from './hooks/usePlaylists'
 import { LoginButton } from './components/LoginButton'
 import { PremiumRequired } from './components/PremiumRequired'
-import { PlaylistList } from './components/PlaylistList'
+import { PlaylistPicker } from './components/PlaylistPicker'
 import type { SpotifyPlaylist } from './types/spotify'
 
 function App() {
@@ -65,12 +65,13 @@ function App() {
           <h2 className="text-lg font-semibold text-white mb-4">
             Select a playlist
           </h2>
-          <PlaylistList
+          <PlaylistPicker
             playlists={playlists}
+            playlistsLoading={playlistsLoading}
+            playlistsError={playlistsError}
+            accessToken={accessToken!}
             onSelect={setSelectedPlaylist}
             selectedId={selectedPlaylist?.id}
-            isLoading={playlistsLoading}
-            error={playlistsError}
           />
         </section>
 
