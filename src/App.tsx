@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAuth } from './hooks/useAuth'
 import { usePremiumCheck } from './hooks/usePremiumCheck'
 import { usePlaylists } from './hooks/usePlaylists'
+import { usePlaylistTracks } from './hooks/usePlaylistTracks'
 import { LoginButton } from './components/LoginButton'
 import { PremiumRequired } from './components/PremiumRequired'
 import { PlaylistPicker } from './components/PlaylistPicker'
@@ -12,6 +13,10 @@ function App() {
   const { isLoading: premiumLoading, isPremium, user } = usePremiumCheck(accessToken)
   const { playlists, isLoading: playlistsLoading, error: playlistsError } = usePlaylists(accessToken)
   const [selectedPlaylist, setSelectedPlaylist] = useState<SpotifyPlaylist | null>(null)
+  const { tracks, isLoading: tracksLoading, error: tracksError } = usePlaylistTracks(
+    selectedPlaylist?.id ?? null,
+    accessToken
+  )
 
   const isLoading = authLoading || (isAuthenticated && premiumLoading)
 
@@ -78,8 +83,19 @@ function App() {
         {selectedPlaylist && (
           <div className="mt-8 p-4 bg-gray-800 rounded-lg">
             <p className="text-white">
-              Selected: <strong>{selectedPlaylist.name}</strong> ({selectedPlaylist.tracks.total} tracks)
+              Selected: <strong>{selectedPlaylist.name}</strong>
             </p>
+            {tracksLoading && (
+              <p className="text-gray-400 mt-2">Loading tracks...</p>
+            )}
+            {tracksError && (
+              <p className="text-red-400 mt-2">{tracksError}</p>
+            )}
+            {!tracksLoading && !tracksError && (
+              <p className="text-gray-400 mt-2">
+                {tracks.length} playable tracks (of {selectedPlaylist.tracks.total} total)
+              </p>
+            )}
           </div>
         )}
       </div>
