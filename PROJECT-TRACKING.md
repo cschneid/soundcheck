@@ -13,7 +13,7 @@
 | 007 | Playlist ID Input | ✅ | a1f601b |
 | 008 | Fetch Playlist Tracks | ✅ | 3b600fc |
 | 009 | Game State Management | ✅ | 7a19201 |
-| 010 | Game Settings UI | ⬜ | |
+| 010 | Game Settings UI | ✅ | ab2c3d6 |
 | 011 | Spotify Player SDK | ⬜ | |
 | 012 | Snippet Playback | ⬜ | |
 | 013 | Fuzzy Matching | ⬜ | |
