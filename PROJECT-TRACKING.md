@@ -11,7 +11,7 @@
 | 005 | Premium Check | ✅ | 6316240 |
 | 006 | Fetch User Playlists | ✅ | af10976 |
 | 007 | Playlist ID Input | ✅ | a1f601b |
-| 008 | Fetch Playlist Tracks | ⬜ | |
+| 008 | Fetch Playlist Tracks | ✅ | 3b600fc |
 | 009 | Game State Management | ⬜ | |
 | 010 | Game Settings UI | ⬜ | |
 | 011 | Spotify Player SDK | ⬜ | |
