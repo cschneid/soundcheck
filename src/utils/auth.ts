@@ -55,8 +55,8 @@ export async function getAuthUrl(): Promise<string> {
   const codeVerifier = generateRandomString(64)
   const codeChallenge = await generateCodeChallenge(codeVerifier)
 
-  // Store verifier for token exchange
-  sessionStorage.setItem(VERIFIER_KEY, codeVerifier)
+  // Store verifier for token exchange (use localStorage - sessionStorage can be lost on redirect)
+  localStorage.setItem(VERIFIER_KEY, codeVerifier)
 
   const params = new URLSearchParams({
     client_id: import.meta.env.VITE_SPOTIFY_CLIENT_ID,
@@ -83,7 +83,7 @@ export function parseAuthCallback(search: string): string | null {
 }
 
 export async function exchangeCodeForToken(code: string): Promise<TokenResponse | null> {
-  const codeVerifier = sessionStorage.getItem(VERIFIER_KEY)
+  const codeVerifier = localStorage.getItem(VERIFIER_KEY)
   if (!codeVerifier) {
     console.error('No code verifier found')
     return null
@@ -113,7 +113,7 @@ export async function exchangeCodeForToken(code: string): Promise<TokenResponse 
     }
 
     // Clear the verifier
-    sessionStorage.removeItem(VERIFIER_KEY)
+    localStorage.removeItem(VERIFIER_KEY)
 
     return response.json()
   } catch (error) {
@@ -125,11 +125,11 @@ export async function exchangeCodeForToken(code: string): Promise<TokenResponse 
 export function storeAuth(token: string, expiresIn: number): void {
   const expiresAt = Date.now() + expiresIn * 1000
   const auth: StoredAuth = { accessToken: token, expiresAt }
-  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(auth))
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(auth))
 }
 
 export function getStoredAuth(): StoredAuth | null {
-  const stored = sessionStorage.getItem(STORAGE_KEY)
+  const stored = localStorage.getItem(STORAGE_KEY)
   if (!stored) return null
 
   try {
@@ -146,8 +146,8 @@ export function getStoredAuth(): StoredAuth | null {
 }
 
 export function clearAuth(): void {
-  sessionStorage.removeItem(STORAGE_KEY)
-  sessionStorage.removeItem(VERIFIER_KEY)
+  localStorage.removeItem(STORAGE_KEY)
+  localStorage.removeItem(VERIFIER_KEY)
 }
 
 export function isExpired(expiresAt: number): boolean {

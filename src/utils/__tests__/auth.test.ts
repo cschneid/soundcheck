@@ -9,7 +9,7 @@ import {
 
 describe('auth utilities', () => {
   beforeEach(() => {
-    sessionStorage.clear()
+    localStorage.clear()
   })
 
   describe('parseAuthCallback', () => {
@@ -52,13 +52,13 @@ describe('auth utilities', () => {
         accessToken: 'old-token',
         expiresAt: Date.now() - 1000,
       }
-      sessionStorage.setItem('spotify_auth', JSON.stringify(expiredAuth))
+      localStorage.setItem('spotify_auth', JSON.stringify(expiredAuth))
 
       expect(getStoredAuth()).toBeNull()
     })
 
     it('returns null for invalid JSON', () => {
-      sessionStorage.setItem('spotify_auth', 'not-json')
+      localStorage.setItem('spotify_auth', 'not-json')
       expect(getStoredAuth()).toBeNull()
     })
   })

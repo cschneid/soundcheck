@@ -102,3 +102,4 @@ npm run dev       # start dev server (port 5173)
 npm run build     # production build
 npm run preview   # preview prod build
 ```
+- Use the chrome-task-executor agent when doing full-path testing. Provide comprehensive instructions to the subtask. This is important to isolate token usage into the subagent, away from our main conversation.
