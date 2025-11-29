@@ -9,7 +9,7 @@
 | 003 | Spotify Types & API Client | ✅ | e8d17e6 |
 | 004 | Spotify OAuth | ✅ | 94ec298 |
 | 005 | Premium Check | ✅ | 6316240 |
-| 006 | Fetch User Playlists | ⬜ | |
+| 006 | Fetch User Playlists | ✅ | af10976 |
 | 007 | Playlist ID Input | ⬜ | |
 | 008 | Fetch Playlist Tracks | ⬜ | |
 | 009 | Game State Management | ⬜ | |
