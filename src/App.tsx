@@ -4,6 +4,7 @@ import { usePremiumCheck } from './hooks/usePremiumCheck'
 import { usePlaylists } from './hooks/usePlaylists'
 import { usePlaylistTracks } from './hooks/usePlaylistTracks'
 import { useGameState } from './hooks/useGameState'
+import { useSpotifyPlayer } from './hooks/useSpotifyPlayer'
 import { LoginButton } from './components/LoginButton'
 import { PremiumRequired } from './components/PremiumRequired'
 import { PlaylistPicker } from './components/PlaylistPicker'
@@ -22,6 +23,7 @@ function App() {
     accessToken
   )
   const { state: gameState, startGame, resetGame } = useGameState()
+  const { deviceId, isReady: playerReady, error: playerError } = useSpotifyPlayer(accessToken)
 
   const handlePlaylistSelect = (playlist: SpotifyPlaylist) => {
     setSelectedPlaylist(playlist)
@@ -78,6 +80,12 @@ function App() {
             <h1 className="text-2xl font-bold text-green-500">Spotify Trainer</h1>
             <p className="text-gray-400 text-sm">
               Welcome{user?.display_name ? `, ${user.display_name}` : ''}
+              {playerReady && (
+                <span className="ml-2 text-green-400">• Player ready</span>
+              )}
+              {playerError && (
+                <span className="ml-2 text-red-400">• {playerError}</span>
+              )}
             </p>
           </div>
           <button
