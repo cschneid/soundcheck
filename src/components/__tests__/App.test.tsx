@@ -12,10 +12,17 @@ vi.mock('../../hooks/usePremiumCheck', () => ({
   usePremiumCheck: vi.fn(),
 }))
 
+// Mock usePlaylists hook
+vi.mock('../../hooks/usePlaylists', () => ({
+  usePlaylists: vi.fn(),
+}))
+
 import { useAuth } from '../../hooks/useAuth'
 import { usePremiumCheck } from '../../hooks/usePremiumCheck'
+import { usePlaylists } from '../../hooks/usePlaylists'
 const mockUseAuth = vi.mocked(useAuth)
 const mockUsePremiumCheck = vi.mocked(usePremiumCheck)
+const mockUsePlaylists = vi.mocked(usePlaylists)
 
 describe('App', () => {
   beforeEach(() => {
@@ -26,6 +33,13 @@ describe('App', () => {
       isPremium: true,
       user: { id: 'user1', display_name: 'Test User', product: 'premium', images: [] },
       error: null,
+    })
+    // Default playlists mock
+    mockUsePlaylists.mockReturnValue({
+      playlists: [],
+      isLoading: false,
+      error: null,
+      refetch: vi.fn(),
     })
   })
 
@@ -57,7 +71,7 @@ describe('App', () => {
     expect(screen.getByText('Login with Spotify')).toBeInTheDocument()
   })
 
-  it('shows welcome when authenticated with premium', () => {
+  it('shows playlist view when authenticated with premium', () => {
     mockUseAuth.mockReturnValue({
       isAuthenticated: true,
       accessToken: 'test-token',
@@ -68,8 +82,8 @@ describe('App', () => {
     })
 
     render(<App />)
-    expect(screen.getByText('Welcome, Test User!')).toBeInTheDocument()
-    expect(screen.getByText('Premium account verified')).toBeInTheDocument()
+    expect(screen.getByText(/Welcome.*Test User/)).toBeInTheDocument()
+    expect(screen.getByText('Select a playlist')).toBeInTheDocument()
     expect(screen.getByText('Logout')).toBeInTheDocument()
   })
 
