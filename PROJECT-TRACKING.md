@@ -19,7 +19,7 @@
 | 013 | Fuzzy Matching | ✅ | 7900d0b |
 | 014 | Answer Input UI | ✅ | 273b447 |
 | 015 | Answer Scoring | ✅ | 893b1d3 |
-| 016 | Result Feedback UI | ⬜ | |
+| 016 | Result Feedback UI | ✅ | c995df3 |
 | 017 | Game Round UI | ⬜ | |
 | 018 | End Screen | ⬜ | |
 | 019 | Main App Flow | ⬜ | |

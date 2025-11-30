@@ -15,6 +15,13 @@ Music quiz app for bar trivia practice. Users pick a Spotify playlist, listen to
 - Spotify Web API + Web Playback SDK
 - No backend (frontend-only, implicit OAuth grant)
 
+## Terminology
+- **Game**: one play session with N rounds
+- **Round**: one song - user hears snippet, guesses artist+title, gets scored
+- **RoundResult**: outcome of a round (track, user guesses, correct/incorrect flags)
+- **GamePhase**: setup → playing → complete
+- **Snippet**: audio clip from random position in track (default 10s)
+
 ## Key Decisions
 - **Audio**: Web Playback SDK (requires Premium)
 - **Snippet**: 10s default, configurable, random start point, replayable
