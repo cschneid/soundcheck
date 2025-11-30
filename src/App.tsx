@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from './hooks/useAuth'
 import { usePremiumCheck } from './hooks/usePremiumCheck'
 import { usePlaylists } from './hooks/usePlaylists'
 import { usePlaylistTracks } from './hooks/usePlaylistTracks'
 import { useGameState } from './hooks/useGameState'
 import { useSpotifyPlayer } from './hooks/useSpotifyPlayer'
+import { useSnippetPlayer } from './hooks/useSnippetPlayer'
 import { LoginButton } from './components/LoginButton'
 import { PremiumRequired } from './components/PremiumRequired'
 import { PlaylistPicker } from './components/PlaylistPicker'
@@ -22,8 +23,13 @@ function App() {
     selectedPlaylist?.id ?? null,
     accessToken
   )
-  const { state: gameState, startGame, resetGame } = useGameState()
+  const { state: gameState, startGame, resetGame, currentTrack } = useGameState()
   const { deviceId, isReady: playerReady, error: playerError } = useSpotifyPlayer(accessToken)
+  const snippetPlayer = useSnippetPlayer(
+    accessToken,
+    deviceId,
+    gameState.settings.snippetDuration
+  )
 
   const handlePlaylistSelect = (playlist: SpotifyPlaylist) => {
     setSelectedPlaylist(playlist)
@@ -41,6 +47,13 @@ function App() {
   const handleBackToPlaylist = () => {
     setShowSettings(false)
   }
+
+  // Auto-play snippet when game starts or round changes
+  useEffect(() => {
+    if (gameState.phase === 'playing' && currentTrack && playerReady) {
+      snippetPlayer.play(currentTrack)
+    }
+  }, [gameState.phase, currentTrack, playerReady])
 
   const isLoading = authLoading || (isAuthenticated && premiumLoading)
 
@@ -152,10 +165,43 @@ function App() {
         {gameState.phase === 'playing' && (
           <div className="mt-8 p-4 bg-gray-800 rounded-lg">
             <p className="text-white">
-              Playing round {gameState.currentRoundIndex + 1} of {gameState.tracks.length}
+              Round {gameState.currentRoundIndex + 1} of {gameState.tracks.length}
             </p>
-            <p className="text-gray-400">
-              Current track: {gameState.tracks[gameState.currentRoundIndex]?.name}
+
+            {/* Progress bar */}
+            <div className="mt-4 bg-gray-700 rounded-full h-2 overflow-hidden">
+              <div
+                className="bg-green-500 h-full transition-all duration-100"
+                style={{ width: `${snippetPlayer.progress}%` }}
+              />
+            </div>
+
+            {/* Playback controls */}
+            <div className="mt-4 flex gap-4">
+              <button
+                onClick={() => snippetPlayer.replay()}
+                disabled={snippetPlayer.isPlaying}
+                className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 disabled:opacity-50"
+              >
+                Replay
+              </button>
+              {snippetPlayer.isPlaying && (
+                <button
+                  onClick={() => snippetPlayer.stop()}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500"
+                >
+                  Stop
+                </button>
+              )}
+            </div>
+
+            {snippetPlayer.error && (
+              <p className="mt-2 text-red-400">{snippetPlayer.error}</p>
+            )}
+
+            {/* Placeholder for answer input (ticket 014) */}
+            <p className="mt-4 text-gray-500 text-sm">
+              Answer input coming in ticket 014...
             </p>
           </div>
         )}

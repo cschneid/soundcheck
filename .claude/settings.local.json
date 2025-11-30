@@ -24,7 +24,8 @@
       "mcp__chrome-devtools__new_page",
       "Bash(pkill:*)",
       "Bash(cat:*)",
-      "mcp__chrome-devtools__get_console_message"
+      "mcp__chrome-devtools__get_console_message",
+      "mcp__chrome-devtools__list_network_requests"
     ],
     "deny": [],
     "ask": []
