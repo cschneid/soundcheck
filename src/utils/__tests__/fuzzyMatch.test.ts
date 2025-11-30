@@ -30,19 +30,38 @@ describe('normalizeString', () => {
     expect(normalizeString("Rock 'n' Roll")).toBe("rock 'n' roll")
   })
 
+  it('normalizes -in\' endings to -ing', () => {
+    expect(normalizeString("Walkin'")).toBe('walking')
+    expect(normalizeString("Lovin' You")).toBe('loving you')
+    expect(normalizeString("Rockin' Around")).toBe('rocking around')
+  })
+
   it('collapses multiple spaces', () => {
     expect(normalizeString('Led  Zeppelin')).toBe('led zeppelin')
     expect(normalizeString('a   b    c')).toBe('a b c')
   })
 })
 
-describe('removeLeadingThe', () => {
+describe('removeLeadingThe (removeLeadingArticle)', () => {
   it('removes "The " prefix', () => {
     expect(removeLeadingThe('The Beatles')).toBe('Beatles')
   })
 
   it('removes "the " prefix (lowercase)', () => {
     expect(removeLeadingThe('the beatles')).toBe('beatles')
+  })
+
+  it('removes "These " prefix', () => {
+    expect(removeLeadingThe('These Boots')).toBe('Boots')
+    expect(removeLeadingThe('these boots are made for walking')).toBe('boots are made for walking')
+  })
+
+  it('removes "A " prefix', () => {
+    expect(removeLeadingThe('A Day in the Life')).toBe('Day in the Life')
+  })
+
+  it('removes "An " prefix', () => {
+    expect(removeLeadingThe('An American Prayer')).toBe('American Prayer')
   })
 
   it('does not remove "The" mid-string', () => {
@@ -87,6 +106,11 @@ describe('extractBaseTitle', () => {
     expect(extractBaseTitle('Song - Live at Wembley')).toBe('Song')
     expect(extractBaseTitle('Song - Radio Edit')).toBe('Song')
     expect(extractBaseTitle('Song - Acoustic Version')).toBe('Song')
+  })
+
+  it('removes year-prefixed remaster suffixes', () => {
+    expect(extractBaseTitle('Immigrant Song - 1990 Remaster')).toBe('Immigrant Song')
+    expect(extractBaseTitle('Stairway to Heaven - 2007 Remaster')).toBe('Stairway to Heaven')
   })
 
   it('preserves titles without suffixes', () => {
@@ -319,6 +343,23 @@ describe('fuzzyMatch', () => {
 
     it('handles complex suffixes', () => {
       const result = fuzzyMatch('Yesterday', 'Yesterday - Remastered 2009')
+      expect(result.isMatch).toBe(true)
+    })
+
+    it('handles year-prefixed remaster in full title', () => {
+      const result = fuzzyMatch('Immigrant Song', 'Immigrant Song - 1990 Remaster')
+      expect(result.isMatch).toBe(true)
+    })
+  })
+
+  describe('These and article handling', () => {
+    it('matches "boots are made for walking" to "These Boots Are Made for Walkin\'"', () => {
+      const result = fuzzyMatch('boots are made for walking', "These Boots Are Made for Walkin'")
+      expect(result.isMatch).toBe(true)
+    })
+
+    it('matches "day in the life" to "A Day in the Life"', () => {
+      const result = fuzzyMatch('day in the life', 'A Day in the Life')
       expect(result.isMatch).toBe(true)
     })
   })

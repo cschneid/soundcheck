@@ -1,0 +1,30 @@
+# Known Bugs
+
+## Fuzzy Matching
+
+### Phonetic misspellings not matched
+- "jamoraqui" should match "Jamiroquai" (similarity 0.7, threshold 0.8)
+- "ah ha" should match "a-ha" (similarity 0.6)
+- Levenshtein distance doesn't account for phonetic similarity
+- Options: lower threshold, add spaceless comparison, or add Soundex/Metaphone
+
+### Spacing variations
+- User types "ah ha", target is "a-ha" (becomes "aha" after normalization)
+- Extra space hurts similarity score
+- Could add spaceless comparison as secondary check
+
+## Track Availability
+
+### Unavailable tracks play as silence
+- Tracks removed from Spotify but still in playlists are selectable
+- They play as silent/empty audio
+- Need to filter using `is_playable` field with `market` parameter
+- See: https://developer.spotify.com/documentation/web-api/concepts/track-relinking
+- Note: `is_playable` can be unreliable per https://github.com/spotify/web-api/issues/1033
+
+## Game Flow
+
+### URL playlist lost on "Play Again"
+- User pastes playlist URL to start game
+- After game ends, clicking "Play Again" loses the playlist
+- Expected: should remember the playlist and restart with it

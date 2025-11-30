@@ -16,22 +16,32 @@ export interface MatchOptions {
  * Normalize string for comparison:
  * 1. Trim whitespace
  * 2. Convert to lowercase
- * 3. Remove punctuation (except internal apostrophes)
- * 4. Collapse multiple spaces
+ * 3. Normalize -in' endings to -ing (walkin' -> walking)
+ * 4. Remove punctuation (except internal apostrophes)
+ * 5. Collapse multiple spaces
  */
 export function normalizeString(str: string): string {
   return str
     .trim()
     .toLowerCase()
+    // Normalize -in' endings to -ing (walkin' -> walking, lovin' -> loving)
+    .replace(/in'(?=\s|$)/g, 'ing')
     .replace(/[^\w\s']/g, '') // remove punctuation except apostrophe
     .replace(/\s+/g, ' ') // collapse multiple spaces
 }
 
 /**
- * Remove leading "The " from artist names
+ * Remove leading articles ("The ", "A ", "An ") and common prefixes ("These ")
+ */
+export function removeLeadingArticle(str: string): string {
+  return str.replace(/^(the|a|an|these)\s+/i, '')
+}
+
+/**
+ * @deprecated Use removeLeadingArticle instead
  */
 export function removeLeadingThe(str: string): string {
-  return str.replace(/^the\s+/i, '')
+  return removeLeadingArticle(str)
 }
 
 /**
@@ -55,8 +65,9 @@ export function extractBaseTitle(str: string): string {
     .replace(/\s*\([^)]*\)\s*$/g, '')
     // Remove content in brackets at the end
     .replace(/\s*\[[^\]]*\]\s*$/g, '')
-    // Remove common suffixes after dash: - Remastered, - Live, - Vocal Version, etc.
-    .replace(/\s*-\s*(remaster|live|remix|radio|single|album|acoustic|vocal|instrumental|mono|stereo|edit|version|mix|extended|original|demo|bonus|deluxe|anniversary).*$/i, '')
+    // Remove common suffixes after dash: - Remastered, - 1990 Remaster, - Live, etc.
+    // Handles both "- Remastered" and "- 1990 Remaster" patterns
+    .replace(/\s*-\s*(\d{4}\s*)?(remaster|live|remix|radio|single|album|acoustic|vocal|instrumental|mono|stereo|edit|version|mix|extended|original|demo|bonus|deluxe|anniversary).*$/i, '')
     .trim()
 }
 
