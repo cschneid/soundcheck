@@ -22,10 +22,17 @@ export function useAuth(): AuthState {
   const [auth, setAuth] = useState<StoredAuth | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Check for stored auth on mount
+  // Check for stored auth on mount and validate it's not expired
   useEffect(() => {
     const stored = getStoredAuth()
     if (stored) {
+      // Check if token is expired (with 5 minute buffer)
+      const bufferMs = 5 * 60 * 1000
+      if (stored.expiresAt && stored.expiresAt < Date.now() + bufferMs) {
+        clearAuth()
+        setIsLoading(false)
+        return
+      }
       setAuth(stored)
       setIsLoading(false)
     }

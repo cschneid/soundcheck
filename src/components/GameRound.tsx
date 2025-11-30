@@ -106,7 +106,26 @@ export function GameRound({
       </div>
 
       {snippetPlayer.error && (
-        <p className="mt-2 text-[var(--error)]">{snippetPlayer.error}</p>
+        <div className="mt-4 bg-[var(--error)]/10 border border-[var(--error)]/30 rounded-lg p-3">
+          <p className="text-[var(--error)] text-sm">{snippetPlayer.error}</p>
+          <div className="flex gap-3 mt-2">
+            <button
+              onClick={() => snippetPlayer.replay()}
+              className="px-3 py-1 text-sm bg-[var(--bg-elevated)] text-[var(--text-primary)] rounded hover:opacity-80 transition-default"
+            >
+              Retry
+            </button>
+            <button
+              onClick={() => {
+                // Submit empty answers and skip to next
+                handleAnswerSubmit('', '')
+              }}
+              className="px-3 py-1 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-default"
+            >
+              Skip Track
+            </button>
+          </div>
+        </div>
       )}
 
       {/* Answer input */}

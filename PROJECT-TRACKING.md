@@ -24,7 +24,7 @@
 | 018 | End Screen | ✅ | f7481f9 |
 | 019 | Main App Flow | ✅ | 722ebf1 |
 | 020 | Polish & Styling | ✅ | e49df1f |
-| 021 | Error Handling | ⬜ | |
+| 021 | Error Handling | ✅ | 013106a |
 | 022 | Deployment | ⬜ | |
 
 **Legend:** ⬜ Todo | 🔄 In Progress | ✅ Done

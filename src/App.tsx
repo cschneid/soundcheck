@@ -157,19 +157,32 @@ function App() {
             {tracksError && (
               <p className="text-[var(--error)] mt-2">{tracksError}</p>
             )}
-            {!tracksLoading && !tracksError && (
+            {!tracksLoading && !tracksError && tracks.length > 0 && (
               <>
                 <p className="text-gray-400 mt-2">
                   {tracks.length} playable tracks
                 </p>
                 <button
                   onClick={handleConfigureGame}
-                  disabled={tracks.length === 0}
-                  className="mt-4 px-6 py-2 bg-[var(--accent)] text-black rounded-full font-semibold hover:bg-[var(--accent-hover)] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-default focus-ring"
+                  className="mt-4 px-6 py-2 bg-[var(--accent)] text-black rounded-full font-semibold hover:bg-[var(--accent-hover)] active:scale-95 transition-default focus-ring"
                 >
                   Configure Game
                 </button>
               </>
+            )}
+            {!tracksLoading && !tracksError && tracks.length === 0 && (
+              <div className="mt-4 p-4 bg-[var(--error)]/10 border border-[var(--error)]/30 rounded-lg">
+                <p className="text-[var(--error)] font-medium">No playable tracks</p>
+                <p className="text-[var(--text-secondary)] text-sm mt-1">
+                  This playlist may only contain local files or unavailable tracks.
+                </p>
+                <button
+                  onClick={() => setSelectedPlaylist(null)}
+                  className="mt-3 px-4 py-1.5 text-sm bg-[var(--bg-elevated)] text-[var(--text-primary)] rounded hover:opacity-80 transition-default"
+                >
+                  Choose Another Playlist
+                </button>
+              </div>
             )}
           </div>
         )}
