@@ -15,7 +15,7 @@
 | 009 | Game State Management | ✅ | 7a19201 |
 | 010 | Game Settings UI | ✅ | ab2c3d6 |
 | 011 | Spotify Player SDK | ✅ | 4cfeb1c |
-| 012 | Snippet Playback | ⬜ | |
+| 012 | Snippet Playback | ✅ | 1a30320 |
 | 013 | Fuzzy Matching | ⬜ | |
 | 014 | Answer Input UI | ⬜ | |
 | 015 | Answer Scoring | ⬜ | |
