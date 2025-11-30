@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useAuth } from './hooks/useAuth'
 import { usePremiumCheck } from './hooks/usePremiumCheck'
 import { usePlaylists } from './hooks/usePlaylists'
@@ -10,6 +10,8 @@ import { LoginButton } from './components/LoginButton'
 import { PremiumRequired } from './components/PremiumRequired'
 import { PlaylistPicker } from './components/PlaylistPicker'
 import { GameSettings } from './components/GameSettings'
+import { AnswerInput } from './components/AnswerInput'
+import type { AnswerInputHandle } from './components/AnswerInput'
 import type { SpotifyPlaylist } from './types/spotify'
 import type { GameSettings as GameSettingsType } from './types/game'
 
@@ -30,6 +32,8 @@ function App() {
     deviceId,
     gameState.settings.snippetDuration
   )
+  const answerInputRef = useRef<AnswerInputHandle>(null)
+  const [answerSubmitted, setAnswerSubmitted] = useState(false)
 
   const handlePlaylistSelect = (playlist: SpotifyPlaylist) => {
     setSelectedPlaylist(playlist)
@@ -48,10 +52,20 @@ function App() {
     setShowSettings(false)
   }
 
+  const handleAnswerSubmit = (artistGuess: string, titleGuess: string) => {
+    setAnswerSubmitted(true)
+    snippetPlayer.stop()
+    // Scoring will be handled in ticket 015
+    console.log('Answer submitted:', { artistGuess, titleGuess })
+  }
+
   // Auto-play snippet when game starts or round changes
   useEffect(() => {
     if (gameState.phase === 'playing' && currentTrack && playerReady) {
       snippetPlayer.play(currentTrack)
+      setAnswerSubmitted(false)
+      answerInputRef.current?.clear()
+      answerInputRef.current?.focus()
     }
   }, [gameState.phase, currentTrack, playerReady])
 
@@ -109,19 +123,27 @@ function App() {
           </button>
         </header>
 
-        <section>
-          <h2 className="text-lg font-semibold text-white mb-4">
-            Select a playlist
-          </h2>
-          <PlaylistPicker
-            playlists={playlists}
-            playlistsLoading={playlistsLoading}
-            playlistsError={playlistsError}
-            accessToken={accessToken!}
-            onSelect={handlePlaylistSelect}
-            selectedId={selectedPlaylist?.id}
-          />
-        </section>
+        {gameState.phase === 'setup' && (
+          <section>
+            <h2 className="text-lg font-semibold text-white mb-4">
+              Select a playlist
+            </h2>
+            <PlaylistPicker
+              playlists={playlists}
+              playlistsLoading={playlistsLoading}
+              playlistsError={playlistsError}
+              accessToken={accessToken!}
+              onSelect={handlePlaylistSelect}
+              selectedId={selectedPlaylist?.id}
+            />
+          </section>
+        )}
+
+        {gameState.phase !== 'setup' && selectedPlaylist && (
+          <div className="mb-4 text-gray-400">
+            Playing: <span className="text-white font-medium">{selectedPlaylist.name}</span>
+          </div>
+        )}
 
         {selectedPlaylist && !showSettings && gameState.phase === 'setup' && (
           <div className="mt-8 p-4 bg-gray-800 rounded-lg">
@@ -199,10 +221,20 @@ function App() {
               <p className="mt-2 text-red-400">{snippetPlayer.error}</p>
             )}
 
-            {/* Placeholder for answer input (ticket 014) */}
-            <p className="mt-4 text-gray-500 text-sm">
-              Answer input coming in ticket 014...
-            </p>
+            {/* Answer input */}
+            <div className="mt-6">
+              <AnswerInput
+                ref={answerInputRef}
+                onSubmit={handleAnswerSubmit}
+                disabled={answerSubmitted}
+              />
+            </div>
+
+            {answerSubmitted && (
+              <p className="mt-4 text-gray-400 text-sm">
+                Answer submitted! Scoring coming in ticket 015...
+              </p>
+            )}
           </div>
         )}
 
