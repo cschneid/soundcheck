@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from './hooks/useAuth'
 import { usePremiumCheck } from './hooks/usePremiumCheck'
 import { usePlaylists } from './hooks/usePlaylists'
@@ -10,10 +10,7 @@ import { LoginButton } from './components/LoginButton'
 import { PremiumRequired } from './components/PremiumRequired'
 import { PlaylistPicker } from './components/PlaylistPicker'
 import { GameSettings } from './components/GameSettings'
-import { AnswerInput } from './components/AnswerInput'
-import { ResultFeedback } from './components/ResultFeedback'
-import { scoreAnswer } from './utils/scoring'
-import type { AnswerInputHandle } from './components/AnswerInput'
+import { GameRound } from './components/GameRound'
 import type { SpotifyPlaylist } from './types/spotify'
 import type { GameSettings as GameSettingsType, RoundResult } from './types/game'
 
@@ -27,16 +24,13 @@ function App() {
     selectedPlaylist?.id ?? null,
     accessToken
   )
-  const { state: gameState, startGame, resetGame, submitAnswer, nextRound, currentTrack, isLastRound } = useGameState()
+  const { state: gameState, startGame, resetGame, submitAnswer, nextRound, currentTrack, score, isLastRound } = useGameState()
   const { deviceId, isReady: playerReady, error: playerError } = useSpotifyPlayer(accessToken)
   const snippetPlayer = useSnippetPlayer(
     accessToken,
     deviceId,
     gameState.settings.snippetDuration
   )
-  const answerInputRef = useRef<AnswerInputHandle>(null)
-  const [answerSubmitted, setAnswerSubmitted] = useState(false)
-  const [lastRoundResult, setLastRoundResult] = useState<RoundResult | null>(null)
 
   const handlePlaylistSelect = (playlist: SpotifyPlaylist) => {
     setSelectedPlaylist(playlist)
@@ -55,34 +49,14 @@ function App() {
     setShowSettings(false)
   }
 
-  const handleAnswerSubmit = (artistGuess: string, titleGuess: string) => {
-    if (!currentTrack) return
-    setAnswerSubmitted(true)
-    snippetPlayer.stop()
-    const result = scoreAnswer(artistGuess, titleGuess, currentTrack)
-    const roundResult: RoundResult = {
-      track: currentTrack,
-      artistAnswer: artistGuess,
-      titleAnswer: titleGuess,
-      artistCorrect: result.artistCorrect,
-      titleCorrect: result.titleCorrect,
-    }
-    setLastRoundResult(roundResult)
-    submitAnswer(artistGuess, titleGuess, result.artistCorrect, result.titleCorrect)
-  }
-
-  const handleNextRound = () => {
-    setLastRoundResult(null)
-    nextRound()
+  const handleRoundSubmit = (result: RoundResult) => {
+    submitAnswer(result.artistAnswer, result.titleAnswer, result.artistCorrect, result.titleCorrect)
   }
 
   // Auto-play snippet when game starts or round changes
   useEffect(() => {
     if (gameState.phase === 'playing' && currentTrack && playerReady) {
       snippetPlayer.play(currentTrack)
-      setAnswerSubmitted(false)
-      answerInputRef.current?.clear()
-      answerInputRef.current?.focus()
     }
   }, [gameState.phase, currentTrack, playerReady])
 
@@ -201,63 +175,17 @@ function App() {
           </div>
         )}
 
-        {gameState.phase === 'playing' && (
-          <div className="mt-8 p-4 bg-gray-800 rounded-lg">
-            <p className="text-white">
-              Round {gameState.currentRoundIndex + 1} of {gameState.tracks.length}
-            </p>
-
-            {/* Progress bar */}
-            <div className="mt-4 bg-gray-700 rounded-full h-2 overflow-hidden">
-              <div
-                className="bg-green-500 h-full transition-all duration-100"
-                style={{ width: `${snippetPlayer.progress}%` }}
-              />
-            </div>
-
-            {/* Playback controls */}
-            <div className="mt-4 flex gap-4">
-              <button
-                onClick={() => snippetPlayer.replay()}
-                disabled={snippetPlayer.isPlaying}
-                className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 disabled:opacity-50"
-              >
-                Replay
-              </button>
-              {snippetPlayer.isPlaying && (
-                <button
-                  onClick={() => snippetPlayer.stop()}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500"
-                >
-                  Stop
-                </button>
-              )}
-            </div>
-
-            {snippetPlayer.error && (
-              <p className="mt-2 text-red-400">{snippetPlayer.error}</p>
-            )}
-
-            {/* Answer input */}
-            <div className="mt-6">
-              <AnswerInput
-                ref={answerInputRef}
-                onSubmit={handleAnswerSubmit}
-                disabled={answerSubmitted}
-              />
-            </div>
-
-            {answerSubmitted && lastRoundResult && currentTrack && (
-              <div className="mt-6">
-                <ResultFeedback
-                  result={lastRoundResult}
-                  track={currentTrack}
-                  onNext={handleNextRound}
-                  isLastRound={isLastRound}
-                />
-              </div>
-            )}
-          </div>
+        {gameState.phase === 'playing' && currentTrack && (
+          <GameRound
+            roundNumber={gameState.currentRoundIndex + 1}
+            totalRounds={gameState.tracks.length}
+            track={currentTrack}
+            score={score}
+            snippetPlayer={snippetPlayer}
+            onSubmit={handleRoundSubmit}
+            onNext={nextRound}
+            isLastRound={isLastRound}
+          />
         )}
 
         {gameState.phase === 'complete' && (
