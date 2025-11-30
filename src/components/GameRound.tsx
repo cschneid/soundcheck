@@ -67,7 +67,7 @@ export function GameRound({
   const maxScore = (roundNumber - 1) * 2
 
   return (
-    <div className="mt-8 p-4 bg-gray-800 rounded-lg">
+    <div className="mt-8 p-4 bg-[var(--bg-secondary)] rounded-lg">
       {/* Header with round info and score */}
       <div className="flex justify-between items-center mb-4">
         <p className="text-white font-medium">
@@ -79,9 +79,9 @@ export function GameRound({
       </div>
 
       {/* Progress bar */}
-      <div className="bg-gray-700 rounded-full h-2 overflow-hidden">
+      <div className="bg-[var(--bg-elevated)] rounded-full h-2 overflow-hidden">
         <div
-          className="bg-green-500 h-full transition-all duration-100"
+          className="bg-[var(--accent)] h-full transition-all duration-100"
           style={{ width: `${snippetPlayer.progress}%` }}
         />
       </div>
@@ -91,14 +91,14 @@ export function GameRound({
         <button
           onClick={() => snippetPlayer.replay()}
           disabled={snippetPlayer.isPlaying}
-          className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 disabled:opacity-50"
+          className="px-4 py-2 bg-[var(--bg-elevated)] text-[var(--text-primary)] rounded-lg hover:bg-[var(--bg-elevated)]/80 disabled:opacity-50 transition-default focus-ring"
         >
           Replay
         </button>
         {snippetPlayer.isPlaying && (
           <button
             onClick={() => snippetPlayer.stop()}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500"
+            className="px-4 py-2 bg-[var(--error)] text-[var(--text-primary)] rounded-lg hover:opacity-90 transition-default focus-ring"
           >
             Stop
           </button>
@@ -106,7 +106,7 @@ export function GameRound({
       </div>
 
       {snippetPlayer.error && (
-        <p className="mt-2 text-red-400">{snippetPlayer.error}</p>
+        <p className="mt-2 text-[var(--error)]">{snippetPlayer.error}</p>
       )}
 
       {/* Answer input */}

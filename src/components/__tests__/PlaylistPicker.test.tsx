@@ -106,7 +106,7 @@ describe('PlaylistPicker', () => {
     const myPlaylistsTab = screen.getByRole('button', { name: 'My Playlists' })
     const enterUrlTab = screen.getByRole('button', { name: 'Enter URL' })
 
-    expect(myPlaylistsTab).toHaveClass('bg-green-500')
-    expect(enterUrlTab).not.toHaveClass('bg-green-500')
+    expect(myPlaylistsTab).toHaveClass('bg-[var(--accent)]')
+    expect(enterUrlTab).not.toHaveClass('bg-[var(--accent)]')
   })
 })

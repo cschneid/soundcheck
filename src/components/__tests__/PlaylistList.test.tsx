@@ -82,7 +82,7 @@ describe('PlaylistList', () => {
 
     const selectedButton = screen.getByText('My Playlist').closest('button')
     expect(selectedButton).toHaveClass('ring-2')
-    expect(selectedButton).toHaveClass('ring-green-500')
+    expect(selectedButton).toHaveClass('ring-[var(--accent)]')
   })
 
   it('renders playlist image when available', () => {

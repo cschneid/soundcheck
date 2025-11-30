@@ -46,7 +46,7 @@ export function EndScreen({
       </div>
 
       {/* Score summary */}
-      <div className="bg-gray-800 rounded-lg p-6 text-center mb-6">
+      <div className="bg-[var(--bg-secondary)] rounded-lg p-6 text-center mb-6">
         <p className="text-5xl font-bold text-white mb-2">
           {totalCorrect}/{maxScore}
         </p>
@@ -70,13 +70,13 @@ export function EndScreen({
       </div>
 
       {/* Round results */}
-      <div className="bg-gray-800 rounded-lg p-4 mb-6">
+      <div className="bg-[var(--bg-secondary)] rounded-lg p-4 mb-6">
         <h3 className="text-lg font-semibold text-white mb-4">Round Results</h3>
         <div className="max-h-64 overflow-y-auto space-y-2">
           {results.map((result, index) => (
             <div
               key={result.track.id}
-              className="flex items-center justify-between py-2 border-b border-gray-700 last:border-0"
+              className="flex items-center justify-between py-2 border-b border-[var(--bg-elevated)] last:border-0"
             >
               <div className="flex-1 min-w-0">
                 <p className="text-white truncate">
@@ -89,13 +89,13 @@ export function EndScreen({
               </div>
               <div className="flex gap-2 ml-4">
                 <span
-                  className={result.artistCorrect ? 'text-green-400' : 'text-red-400'}
+                  className={result.artistCorrect ? 'text-[var(--success)]' : 'text-[var(--error)]'}
                   title={result.artistCorrect ? 'Artist correct' : 'Artist incorrect'}
                 >
                   {result.artistCorrect ? '✓' : '✗'}
                 </span>
                 <span
-                  className={result.titleCorrect ? 'text-green-400' : 'text-red-400'}
+                  className={result.titleCorrect ? 'text-[var(--success)]' : 'text-[var(--error)]'}
                   title={result.titleCorrect ? 'Title correct' : 'Title incorrect'}
                 >
                   {result.titleCorrect ? '✓' : '✗'}
@@ -110,13 +110,13 @@ export function EndScreen({
       <div className="flex gap-4 justify-center">
         <button
           onClick={onPlayAgain}
-          className="px-6 py-2 bg-green-500 text-white rounded-full font-semibold hover:bg-green-400"
+          className="px-6 py-2 bg-[var(--accent)] text-black rounded-full font-semibold hover:bg-[var(--accent-hover)] active:scale-95 transition-default focus-ring"
         >
           Play Again
         </button>
         <button
           onClick={onNewPlaylist}
-          className="px-6 py-2 bg-gray-700 text-white rounded-full font-semibold hover:bg-gray-600"
+          className="px-6 py-2 bg-[var(--bg-elevated)] text-[var(--text-primary)] rounded-full font-semibold hover:opacity-90 transition-default focus-ring"
         >
           Choose New Playlist
         </button>

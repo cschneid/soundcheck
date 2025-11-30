@@ -44,7 +44,7 @@ export function ResultFeedback({ result, track, onNext, isLastRound }: Props) {
             <div className="flex items-center gap-2">
               <span
                 className={`text-lg ${
-                  result.artistCorrect ? 'text-green-400' : 'text-red-400'
+                  result.artistCorrect ? 'text-[var(--success)]' : 'text-[var(--error)]'
                 }`}
                 aria-label={result.artistCorrect ? 'correct' : 'incorrect'}
               >
@@ -57,7 +57,7 @@ export function ResultFeedback({ result, track, onNext, isLastRound }: Props) {
             <div className="flex items-center gap-2">
               <span
                 className={`text-lg ${
-                  result.titleCorrect ? 'text-green-400' : 'text-red-400'
+                  result.titleCorrect ? 'text-[var(--success)]' : 'text-[var(--error)]'
                 }`}
                 aria-label={result.titleCorrect ? 'correct' : 'incorrect'}
               >
@@ -77,7 +77,7 @@ export function ResultFeedback({ result, track, onNext, isLastRound }: Props) {
       <div className="mt-6 flex justify-end">
         <button
           onClick={onNext}
-          className="px-6 py-2 bg-green-500 text-white rounded-full font-semibold hover:bg-green-400"
+          className="px-6 py-2 bg-[var(--accent)] text-black rounded-full font-semibold hover:bg-[var(--accent-hover)] active:scale-95 transition-default focus-ring"
         >
           {isLastRound ? 'See Results' : 'Next Song →'}
         </button>

@@ -55,7 +55,7 @@ export const AnswerInput = forwardRef<AnswerInputHandle, Props>(
             onChange={(e) => setArtist(e.target.value)}
             disabled={disabled}
             placeholder="Enter artist name"
-            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-4 py-2 bg-[var(--bg-elevated)] border border-[var(--bg-elevated)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-secondary)] transition-default focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
           />
         </div>
 
@@ -74,14 +74,14 @@ export const AnswerInput = forwardRef<AnswerInputHandle, Props>(
             onKeyDown={handleKeyDown}
             disabled={disabled}
             placeholder="Enter song title"
-            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-4 py-2 bg-[var(--bg-elevated)] border border-[var(--bg-elevated)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-secondary)] transition-default focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
           />
         </div>
 
         <button
           type="submit"
           disabled={disabled}
-          className="w-full px-6 py-2 bg-green-500 text-white rounded-full font-semibold hover:bg-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-6 py-2 bg-[var(--accent)] text-black rounded-full font-semibold hover:bg-[var(--accent-hover)] active:scale-[0.98] transition-default focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Submit Answer
         </button>

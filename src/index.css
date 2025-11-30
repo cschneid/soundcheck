@@ -1,13 +1,24 @@
 @import "tailwindcss";
 
 :root {
+  /* Color palette */
+  --bg-primary: #121212;
+  --bg-secondary: #181818;
+  --bg-elevated: #282828;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --accent: #1db954;
+  --accent-hover: #1ed760;
+  --error: #e91429;
+  --success: #1db954;
+
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #121212;
+  color-scheme: dark;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -40,4 +51,14 @@ body {
 
 .animate-whomp {
   animation: whomp 0.4s ease-in-out;
+}
+
+/* Focus ring utility */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 focus:ring-offset-[var(--bg-primary)];
+}
+
+/* Transition utility */
+.transition-default {
+  transition: all 150ms ease-in-out;
 }

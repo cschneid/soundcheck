@@ -52,18 +52,18 @@ export function PlaylistInput({ accessToken, onPlaylistLoad }: Props) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Paste Spotify playlist URL or ID"
-          className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          className="flex-1 bg-[var(--bg-secondary)] border border-[var(--bg-elevated)] rounded-lg px-4 py-2 text-[var(--text-primary)] placeholder-[var(--text-secondary)] transition-default focus-ring"
           disabled={isLoading}
         />
         <button
           type="submit"
           disabled={isLoading || !input.trim()}
-          className="bg-green-500 hover:bg-green-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-black font-semibold px-6 py-2 rounded-lg transition-colors"
+          className="bg-[var(--accent)] hover:bg-[var(--accent-hover)] disabled:bg-[var(--bg-elevated)] disabled:text-[var(--text-secondary)] disabled:cursor-not-allowed text-black font-semibold px-6 py-2 rounded-lg transition-default focus-ring"
         >
           {isLoading ? 'Loading...' : 'Load'}
         </button>
       </div>
-      {error && <p className="text-red-400 text-sm">{error}</p>}
+      {error && <p className="text-[var(--error)] text-sm">{error}</p>}
     </form>
   )
 }

@@ -6,7 +6,7 @@ export function LoginButton({ onClick }: Props) {
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-3 bg-[#1db954] hover:bg-[#1ed760] text-black font-semibold py-3 px-6 rounded-full transition-colors"
+      className="flex items-center gap-3 bg-[var(--accent)] hover:bg-[var(--accent-hover)] active:scale-95 text-black font-semibold py-3 px-6 rounded-full transition-default focus-ring"
     >
       <SpotifyIcon />
       Login with Spotify

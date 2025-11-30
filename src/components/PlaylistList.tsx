@@ -26,7 +26,7 @@ export function PlaylistList({
   if (error) {
     return (
       <div className="text-center py-8">
-        <p className="text-red-400">Error: {error}</p>
+        <p className="text-[var(--error)]">Error: {error}</p>
       </div>
     )
   }
@@ -70,11 +70,11 @@ function PlaylistCard({ playlist, isSelected, onClick }: CardProps) {
       onClick={onClick}
       className={`
         flex items-center gap-4 p-3 rounded-lg text-left w-full
-        transition-colors cursor-pointer
+        transition-default focus-ring cursor-pointer
         ${
           isSelected
-            ? 'bg-green-500/20 ring-2 ring-green-500'
-            : 'bg-gray-800 hover:bg-gray-700'
+            ? 'bg-[var(--accent)]/20 ring-2 ring-[var(--accent)]'
+            : 'bg-[var(--bg-secondary)] hover:bg-[var(--bg-elevated)]'
         }
       `}
     >

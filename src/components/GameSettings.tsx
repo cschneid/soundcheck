@@ -56,7 +56,7 @@ export function GameSettings({
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6 max-w-md">
+    <div className="bg-[var(--bg-secondary)] rounded-lg p-6 max-w-md">
       <div className="mb-6">
         <h2 className="text-xl font-bold text-white">{playlist.name}</h2>
         <p className="text-gray-400 text-sm">
@@ -79,10 +79,10 @@ export function GameSettings({
             max={maxRounds}
             value={roundCount}
             onChange={(e) => setRoundCount(parseInt(e.target.value) || 0)}
-            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+            className="w-full px-3 py-2 bg-[var(--bg-elevated)] border border-[var(--bg-elevated)] rounded-lg text-[var(--text-primary)] transition-default focus-ring"
           />
           {errors.rounds && (
-            <p className="text-red-400 text-sm mt-1">{errors.rounds}</p>
+            <p className="text-[var(--error)] text-sm mt-1">{errors.rounds}</p>
           )}
           <p className="text-gray-500 text-xs mt-1">1-{maxRounds}</p>
         </div>
@@ -101,10 +101,10 @@ export function GameSettings({
             max={MAX_DURATION}
             value={snippetDuration}
             onChange={(e) => setSnippetDuration(parseInt(e.target.value) || 0)}
-            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+            className="w-full px-3 py-2 bg-[var(--bg-elevated)] border border-[var(--bg-elevated)] rounded-lg text-[var(--text-primary)] transition-default focus-ring"
           />
           {errors.duration && (
-            <p className="text-red-400 text-sm mt-1">{errors.duration}</p>
+            <p className="text-[var(--error)] text-sm mt-1">{errors.duration}</p>
           )}
           <p className="text-gray-500 text-xs mt-1">
             {MIN_DURATION}-{MAX_DURATION}
@@ -115,14 +115,14 @@ export function GameSettings({
       <div className="flex justify-between mt-6">
         <button
           onClick={onBack}
-          className="px-4 py-2 text-gray-400 hover:text-white"
+          className="px-4 py-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-default focus-ring rounded-lg"
         >
           Back
         </button>
         <button
           onClick={handleStart}
           disabled={!isValid}
-          className="px-6 py-2 bg-green-500 text-white rounded-full font-semibold hover:bg-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 py-2 bg-[var(--accent)] text-black rounded-full font-semibold hover:bg-[var(--accent-hover)] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-default focus-ring"
         >
           Start Game
         </button>

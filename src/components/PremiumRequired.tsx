@@ -19,7 +19,7 @@ export function PremiumRequired({ onLogout }: PremiumRequiredProps) {
         </p>
         <button
           onClick={onLogout}
-          className="bg-green-500 hover:bg-green-600 text-black font-semibold py-3 px-6 rounded-full transition-colors"
+          className="bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-black font-semibold py-3 px-6 rounded-full active:scale-95 transition-default focus-ring"
         >
           Log out and try another account
         </button>

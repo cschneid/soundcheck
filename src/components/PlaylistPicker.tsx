@@ -69,11 +69,11 @@ function TabButton({ active, onClick, children }: TabButtonProps) {
     <button
       onClick={onClick}
       className={`
-        px-4 py-2 rounded-lg font-medium transition-colors
+        px-4 py-2 rounded-lg font-medium transition-default focus-ring
         ${
           active
-            ? 'bg-green-500 text-black'
-            : 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
+            ? 'bg-[var(--accent)] text-black'
+            : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)]'
         }
       `}
     >
