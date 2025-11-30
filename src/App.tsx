@@ -12,6 +12,7 @@ import { PlaylistPicker } from './components/PlaylistPicker'
 import { GameSettings } from './components/GameSettings'
 import { GameRound } from './components/GameRound'
 import { EndScreen } from './components/EndScreen'
+import { LoadingSpinner } from './components/LoadingSpinner'
 import type { SpotifyPlaylist } from './types/spotify'
 import type { GameSettings as GameSettingsType, RoundResult } from './types/game'
 
@@ -76,11 +77,7 @@ function App() {
   const isLoading = authLoading || (isAuthenticated && premiumLoading)
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-400">Loading...</p>
-      </div>
-    )
+    return <LoadingSpinner message="Loading your profile..." />
   }
 
   if (!isAuthenticated) {

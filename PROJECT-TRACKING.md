@@ -21,7 +21,7 @@
 | 015 | Answer Scoring | ✅ | 893b1d3 |
 | 016 | Result Feedback UI | ✅ | c995df3 |
 | 017 | Game Round UI | ✅ | f4db821 |
-| 018 | End Screen | ⬜ | |
+| 018 | End Screen | ✅ | f7481f9 |
 | 019 | Main App Flow | ⬜ | |
 | 020 | Polish & Styling | ⬜ | |
 | 021 | Error Handling | ⬜ | |

@@ -54,7 +54,7 @@ describe('App', () => {
     })
 
     render(<App />)
-    expect(screen.getByText('Loading...')).toBeInTheDocument()
+    expect(screen.getByText('Loading your profile...')).toBeInTheDocument()
   })
 
   it('shows login button when not authenticated', () => {
