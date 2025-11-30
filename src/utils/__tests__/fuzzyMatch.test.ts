@@ -3,6 +3,7 @@ import {
   normalizeString,
   removeLeadingThe,
   removePunctuation,
+  extractBaseTitle,
   levenshteinDistance,
   similarityScore,
   fuzzyMatch,
@@ -66,6 +67,37 @@ describe('removePunctuation', () => {
   it('preserves letters and numbers', () => {
     expect(removePunctuation('1999')).toBe('1999')
     expect(removePunctuation('24K Magic')).toBe('24K Magic')
+  })
+})
+
+describe('extractBaseTitle', () => {
+  it('removes parenthetical suffixes', () => {
+    expect(extractBaseTitle("I Can't Help Myself (Sugar Pie, Honey Bunch)")).toBe("I Can't Help Myself")
+    expect(extractBaseTitle('Song (Remastered 2021)')).toBe('Song')
+  })
+
+  it('removes bracketed suffixes', () => {
+    expect(extractBaseTitle('Song [Live]')).toBe('Song')
+    expect(extractBaseTitle('Song [Bonus Track]')).toBe('Song')
+  })
+
+  it('removes common dash suffixes', () => {
+    expect(extractBaseTitle('Maybe - Vocal Version')).toBe('Maybe')
+    expect(extractBaseTitle('Song - Remastered')).toBe('Song')
+    expect(extractBaseTitle('Song - Live at Wembley')).toBe('Song')
+    expect(extractBaseTitle('Song - Radio Edit')).toBe('Song')
+    expect(extractBaseTitle('Song - Acoustic Version')).toBe('Song')
+  })
+
+  it('preserves titles without suffixes', () => {
+    expect(extractBaseTitle('Bohemian Rhapsody')).toBe('Bohemian Rhapsody')
+    expect(extractBaseTitle('Hey Jude')).toBe('Hey Jude')
+  })
+
+  it('handles dashes that are part of the title', () => {
+    // Only removes known suffix patterns after dash
+    expect(extractBaseTitle('Iko-Iko')).toBe('Iko-Iko')
+    expect(extractBaseTitle('Ob-La-Di, Ob-La-Da')).toBe('Ob-La-Di, Ob-La-Da')
   })
 })
 
@@ -259,6 +291,34 @@ describe('fuzzyMatch', () => {
 
     it('handles "24K Magic" variations', () => {
       const result = fuzzyMatch('24k magic', '24K Magic')
+      expect(result.isMatch).toBe(true)
+    })
+  })
+
+  describe('parenthetical/suffix matching', () => {
+    it('matches base title against full title with parenthetical', () => {
+      const result = fuzzyMatch("I Can't Help Myself", "I Can't Help Myself (Sugar Pie, Honey Bunch)")
+      expect(result.isMatch).toBe(true)
+      expect(result.similarity).toBe(1)
+    })
+
+    it('matches base title against title with remaster suffix', () => {
+      const result = fuzzyMatch('Maybe', 'Maybe - Vocal Version')
+      expect(result.isMatch).toBe(true)
+    })
+
+    it('matches base title against title with brackets', () => {
+      const result = fuzzyMatch('Bohemian Rhapsody', 'Bohemian Rhapsody [Live]')
+      expect(result.isMatch).toBe(true)
+    })
+
+    it('still matches if user includes the suffix', () => {
+      const result = fuzzyMatch("I Can't Help Myself (Sugar Pie, Honey Bunch)", "I Can't Help Myself (Sugar Pie, Honey Bunch)")
+      expect(result.isMatch).toBe(true)
+    })
+
+    it('handles complex suffixes', () => {
+      const result = fuzzyMatch('Yesterday', 'Yesterday - Remastered 2009')
       expect(result.isMatch).toBe(true)
     })
   })

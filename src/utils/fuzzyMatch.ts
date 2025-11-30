@@ -42,6 +42,25 @@ export function removePunctuation(str: string): string {
 }
 
 /**
+ * Extract base title by removing parenthetical suffixes and common tags
+ * Examples:
+ *   "I Can't Help Myself (Sugar Pie, Honey Bunch)" -> "I Can't Help Myself"
+ *   "Maybe - Vocal Version" -> "Maybe"
+ *   "Song Title (Remastered 2021)" -> "Song Title"
+ *   "Song Title [Live]" -> "Song Title"
+ */
+export function extractBaseTitle(str: string): string {
+  return str
+    // Remove content in parentheses at the end
+    .replace(/\s*\([^)]*\)\s*$/g, '')
+    // Remove content in brackets at the end
+    .replace(/\s*\[[^\]]*\]\s*$/g, '')
+    // Remove common suffixes after dash: - Remastered, - Live, - Vocal Version, etc.
+    .replace(/\s*-\s*(remaster|live|remix|radio|single|album|acoustic|vocal|instrumental|mono|stereo|edit|version|mix|extended|original|demo|bonus|deluxe|anniversary).*$/i, '')
+    .trim()
+}
+
+/**
  * Calculate Levenshtein distance between two strings
  */
 export function levenshteinDistance(a: string, b: string): number {
@@ -89,6 +108,7 @@ export function similarityScore(a: string, b: string): number {
 
 /**
  * Fuzzy match input against target with configurable threshold
+ * For titles, also matches against base title (without parenthetical suffixes)
  */
 export function fuzzyMatch(
   input: string,
@@ -107,8 +127,16 @@ export function fuzzyMatch(
     normalizedTarget = removeLeadingThe(normalizedTarget)
   }
 
-  // Calculate similarity
-  const similarity = similarityScore(normalizedInput, normalizedTarget)
+  // Calculate similarity against full target
+  const fullSimilarity = similarityScore(normalizedInput, normalizedTarget)
+
+  // Also try matching against base title (without parenthetical suffixes)
+  const baseTarget = normalizeString(extractBaseTitle(target))
+  const baseTargetNormalized = ignoreThe ? removeLeadingThe(baseTarget) : baseTarget
+  const baseSimilarity = similarityScore(normalizedInput, baseTargetNormalized)
+
+  // Use the better match
+  const similarity = Math.max(fullSimilarity, baseSimilarity)
   const isMatch = similarity >= threshold
 
   return {
