@@ -11,11 +11,11 @@ import { PremiumRequired } from './components/PremiumRequired'
 import { PlaylistPicker } from './components/PlaylistPicker'
 import { GameSettings } from './components/GameSettings'
 import { AnswerInput } from './components/AnswerInput'
+import { ResultFeedback } from './components/ResultFeedback'
 import { scoreAnswer } from './utils/scoring'
 import type { AnswerInputHandle } from './components/AnswerInput'
-import type { ScoringResult } from './utils/scoring'
 import type { SpotifyPlaylist } from './types/spotify'
-import type { GameSettings as GameSettingsType } from './types/game'
+import type { GameSettings as GameSettingsType, RoundResult } from './types/game'
 
 function App() {
   const { isAuthenticated, accessToken, isLoading: authLoading, login, logout } = useAuth()
@@ -27,7 +27,7 @@ function App() {
     selectedPlaylist?.id ?? null,
     accessToken
   )
-  const { state: gameState, startGame, resetGame, submitAnswer, currentTrack } = useGameState()
+  const { state: gameState, startGame, resetGame, submitAnswer, nextRound, currentTrack, isLastRound } = useGameState()
   const { deviceId, isReady: playerReady, error: playerError } = useSpotifyPlayer(accessToken)
   const snippetPlayer = useSnippetPlayer(
     accessToken,
@@ -36,7 +36,7 @@ function App() {
   )
   const answerInputRef = useRef<AnswerInputHandle>(null)
   const [answerSubmitted, setAnswerSubmitted] = useState(false)
-  const [lastResult, setLastResult] = useState<ScoringResult | null>(null)
+  const [lastRoundResult, setLastRoundResult] = useState<RoundResult | null>(null)
 
   const handlePlaylistSelect = (playlist: SpotifyPlaylist) => {
     setSelectedPlaylist(playlist)
@@ -60,8 +60,20 @@ function App() {
     setAnswerSubmitted(true)
     snippetPlayer.stop()
     const result = scoreAnswer(artistGuess, titleGuess, currentTrack)
-    setLastResult(result)
+    const roundResult: RoundResult = {
+      track: currentTrack,
+      artistAnswer: artistGuess,
+      titleAnswer: titleGuess,
+      artistCorrect: result.artistCorrect,
+      titleCorrect: result.titleCorrect,
+    }
+    setLastRoundResult(roundResult)
     submitAnswer(artistGuess, titleGuess, result.artistCorrect, result.titleCorrect)
+  }
+
+  const handleNextRound = () => {
+    setLastRoundResult(null)
+    nextRound()
   }
 
   // Auto-play snippet when game starts or round changes
@@ -69,7 +81,6 @@ function App() {
     if (gameState.phase === 'playing' && currentTrack && playerReady) {
       snippetPlayer.play(currentTrack)
       setAnswerSubmitted(false)
-      setLastResult(null)
       answerInputRef.current?.clear()
       answerInputRef.current?.focus()
     }
@@ -236,22 +247,14 @@ function App() {
               />
             </div>
 
-            {answerSubmitted && lastResult && (
-              <div className="mt-4 p-3 bg-gray-700 rounded-lg">
-                <p className="text-sm">
-                  <span className={lastResult.artistCorrect ? 'text-green-400' : 'text-red-400'}>
-                    Artist: {lastResult.artistCorrect ? '✓' : '✗'}
-                  </span>
-                  <span className="mx-2">|</span>
-                  <span className={lastResult.titleCorrect ? 'text-green-400' : 'text-red-400'}>
-                    Title: {lastResult.titleCorrect ? '✓' : '✗'}
-                  </span>
-                </p>
-                {currentTrack && (
-                  <p className="mt-2 text-gray-400 text-xs">
-                    Answer: {currentTrack.artists.map(a => a.name).join(', ')} - {currentTrack.name}
-                  </p>
-                )}
+            {answerSubmitted && lastRoundResult && currentTrack && (
+              <div className="mt-6">
+                <ResultFeedback
+                  result={lastRoundResult}
+                  track={currentTrack}
+                  onNext={handleNextRound}
+                  isLastRound={isLastRound}
+                />
               </div>
             )}
           </div>

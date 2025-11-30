@@ -20,3 +20,24 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
+
+@keyframes celebrate {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes whomp {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+
+.animate-celebrate {
+  animation: celebrate 0.4s ease-in-out;
+}
+
+.animate-whomp {
+  animation: whomp 0.4s ease-in-out;
+}

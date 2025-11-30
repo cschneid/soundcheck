@@ -18,7 +18,7 @@
 | 012 | Snippet Playback | ✅ | 1a30320 |
 | 013 | Fuzzy Matching | ✅ | 7900d0b |
 | 014 | Answer Input UI | ✅ | 273b447 |
-| 015 | Answer Scoring | ⬜ | |
+| 015 | Answer Scoring | ✅ | 893b1d3 |
 | 016 | Result Feedback UI | ⬜ | |
 | 017 | Game Round UI | ⬜ | |
 | 018 | End Screen | ⬜ | |
