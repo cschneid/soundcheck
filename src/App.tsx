@@ -11,6 +11,7 @@ import { PremiumRequired } from './components/PremiumRequired'
 import { PlaylistPicker } from './components/PlaylistPicker'
 import { GameSettings } from './components/GameSettings'
 import { GameRound } from './components/GameRound'
+import { EndScreen } from './components/EndScreen'
 import type { SpotifyPlaylist } from './types/spotify'
 import type { GameSettings as GameSettingsType, RoundResult } from './types/game'
 
@@ -51,6 +52,18 @@ function App() {
 
   const handleRoundSubmit = (result: RoundResult) => {
     submitAnswer(result.artistAnswer, result.titleAnswer, result.artistCorrect, result.titleCorrect)
+  }
+
+  const handlePlayAgain = () => {
+    // Reset game but keep same playlist - will restart with same tracks
+    resetGame()
+    setShowSettings(true)
+  }
+
+  const handleNewPlaylist = () => {
+    resetGame()
+    setSelectedPlaylist(null)
+    setShowSettings(false)
   }
 
   // Auto-play snippet when game starts or round changes
@@ -188,16 +201,13 @@ function App() {
           />
         )}
 
-        {gameState.phase === 'complete' && (
-          <div className="mt-8 p-4 bg-gray-800 rounded-lg">
-            <p className="text-white text-xl">Game Complete!</p>
-            <button
-              onClick={resetGame}
-              className="mt-4 px-6 py-2 bg-green-500 text-white rounded-full font-semibold hover:bg-green-400"
-            >
-              Play Again
-            </button>
-          </div>
+        {gameState.phase === 'complete' && selectedPlaylist && (
+          <EndScreen
+            results={gameState.results}
+            playlist={selectedPlaylist}
+            onPlayAgain={handlePlayAgain}
+            onNewPlaylist={handleNewPlaylist}
+          />
         )}
       </div>
     </div>
