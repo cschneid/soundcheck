@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderHook, waitFor } from '@testing-library/react'
+import { renderHook, waitFor, act } from '@testing-library/react'
 import { usePlaylists } from '../usePlaylists'
 
 const mockGetUserPlaylists = vi.fn()
@@ -108,7 +108,9 @@ describe('usePlaylists', () => {
     expect(mockGetUserPlaylists).toHaveBeenCalledTimes(1)
 
     // Call refetch
-    result.current.refetch()
+    act(() => {
+      result.current.refetch()
+    })
 
     await waitFor(() => {
       expect(mockGetUserPlaylists).toHaveBeenCalledTimes(2)
