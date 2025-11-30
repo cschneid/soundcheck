@@ -11,7 +11,9 @@ import { PremiumRequired } from './components/PremiumRequired'
 import { PlaylistPicker } from './components/PlaylistPicker'
 import { GameSettings } from './components/GameSettings'
 import { AnswerInput } from './components/AnswerInput'
+import { scoreAnswer } from './utils/scoring'
 import type { AnswerInputHandle } from './components/AnswerInput'
+import type { ScoringResult } from './utils/scoring'
 import type { SpotifyPlaylist } from './types/spotify'
 import type { GameSettings as GameSettingsType } from './types/game'
 
@@ -25,7 +27,7 @@ function App() {
     selectedPlaylist?.id ?? null,
     accessToken
   )
-  const { state: gameState, startGame, resetGame, currentTrack } = useGameState()
+  const { state: gameState, startGame, resetGame, submitAnswer, currentTrack } = useGameState()
   const { deviceId, isReady: playerReady, error: playerError } = useSpotifyPlayer(accessToken)
   const snippetPlayer = useSnippetPlayer(
     accessToken,
@@ -34,6 +36,7 @@ function App() {
   )
   const answerInputRef = useRef<AnswerInputHandle>(null)
   const [answerSubmitted, setAnswerSubmitted] = useState(false)
+  const [lastResult, setLastResult] = useState<ScoringResult | null>(null)
 
   const handlePlaylistSelect = (playlist: SpotifyPlaylist) => {
     setSelectedPlaylist(playlist)
@@ -53,10 +56,12 @@ function App() {
   }
 
   const handleAnswerSubmit = (artistGuess: string, titleGuess: string) => {
+    if (!currentTrack) return
     setAnswerSubmitted(true)
     snippetPlayer.stop()
-    // Scoring will be handled in ticket 015
-    console.log('Answer submitted:', { artistGuess, titleGuess })
+    const result = scoreAnswer(artistGuess, titleGuess, currentTrack)
+    setLastResult(result)
+    submitAnswer(artistGuess, titleGuess, result.artistCorrect, result.titleCorrect)
   }
 
   // Auto-play snippet when game starts or round changes
@@ -64,6 +69,7 @@ function App() {
     if (gameState.phase === 'playing' && currentTrack && playerReady) {
       snippetPlayer.play(currentTrack)
       setAnswerSubmitted(false)
+      setLastResult(null)
       answerInputRef.current?.clear()
       answerInputRef.current?.focus()
     }
@@ -230,10 +236,23 @@ function App() {
               />
             </div>
 
-            {answerSubmitted && (
-              <p className="mt-4 text-gray-400 text-sm">
-                Answer submitted! Scoring coming in ticket 015...
-              </p>
+            {answerSubmitted && lastResult && (
+              <div className="mt-4 p-3 bg-gray-700 rounded-lg">
+                <p className="text-sm">
+                  <span className={lastResult.artistCorrect ? 'text-green-400' : 'text-red-400'}>
+                    Artist: {lastResult.artistCorrect ? '✓' : '✗'}
+                  </span>
+                  <span className="mx-2">|</span>
+                  <span className={lastResult.titleCorrect ? 'text-green-400' : 'text-red-400'}>
+                    Title: {lastResult.titleCorrect ? '✓' : '✗'}
+                  </span>
+                </p>
+                {currentTrack && (
+                  <p className="mt-2 text-gray-400 text-xs">
+                    Answer: {currentTrack.artists.map(a => a.name).join(', ')} - {currentTrack.name}
+                  </p>
+                )}
+              </div>
             )}
           </div>
         )}

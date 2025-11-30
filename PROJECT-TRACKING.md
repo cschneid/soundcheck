@@ -17,7 +17,7 @@
 | 011 | Spotify Player SDK | ✅ | 4cfeb1c |
 | 012 | Snippet Playback | ✅ | 1a30320 |
 | 013 | Fuzzy Matching | ✅ | 7900d0b |
-| 014 | Answer Input UI | ✅ | 9611243 |
+| 014 | Answer Input UI | ✅ | 273b447 |
 | 015 | Answer Scoring | ⬜ | |
 | 016 | Result Feedback UI | ⬜ | |
 | 017 | Game Round UI | ⬜ | |
