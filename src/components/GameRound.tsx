@@ -81,8 +81,8 @@ export function GameRound({
       {/* Progress bar */}
       <div className="bg-[var(--bg-elevated)] rounded-full h-2 overflow-hidden">
         <div
-          className="bg-[var(--accent)] h-full transition-all duration-100"
-          style={{ width: `${snippetPlayer.progress}%` }}
+          className="bg-[var(--accent)] h-full"
+          style={{ width: `${snippetPlayer.progress}%`, minWidth: snippetPlayer.progress > 0 ? '4px' : '0' }}
         />
       </div>
 

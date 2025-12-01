@@ -30,6 +30,7 @@ export function useSnippetPlayer(
   const startTimeRef = useRef<number>(0)
   const pendingPlaybackRef = useRef<boolean>(false)
   const playbackTimeoutRef = useRef<number | null>(null)
+  const isPlayingRef = useRef<boolean>(false)
 
   const durationMs = durationSeconds * 1000
   const PLAYBACK_TIMEOUT_MS = 5000 // 5 seconds to detect playback failure
@@ -52,6 +53,7 @@ export function useSnippetPlayer(
   const stop = useCallback(async () => {
     clearTimers()
     setIsPlaying(false)
+    isPlayingRef.current = false
     setProgress(0)
 
     if (accessToken && deviceId) {
@@ -101,6 +103,7 @@ export function useSnippetPlayer(
         await client.startPlayback(deviceId, track.uri, positionMs)
 
         setIsPlaying(true)
+        isPlayingRef.current = true
 
         // If no player instance, fall back to starting timers immediately
         if (!player) {
@@ -113,6 +116,7 @@ export function useSnippetPlayer(
               pendingPlaybackRef.current = false
               setError('Track failed to play - may be unavailable')
               setIsPlaying(false)
+              isPlayingRef.current = false
             }
           }, PLAYBACK_TIMEOUT_MS)
         }
@@ -120,6 +124,7 @@ export function useSnippetPlayer(
         pendingPlaybackRef.current = false
         setError(err instanceof Error ? err.message : 'Playback failed')
         setIsPlaying(false)
+        isPlayingRef.current = false
       }
     },
     [accessToken, deviceId, player, clearTimers, startTimers, PLAYBACK_TIMEOUT_MS]
@@ -160,21 +165,22 @@ export function useSnippetPlayer(
     }
 
     const handlePlaybackError = ({ message }: Spotify.ErrorState) => {
-      if (pendingPlaybackRef.current || isPlaying) {
+      if (pendingPlaybackRef.current || isPlayingRef.current) {
         pendingPlaybackRef.current = false
         clearTimers()
         setError(`Playback error: ${message}`)
         setIsPlaying(false)
+        isPlayingRef.current = false
       }
     }
 
     player.addListener('player_state_changed', handleStateChange)
     player.addListener('playback_error', handlePlaybackError)
     return () => {
-      player.removeListener('player_state_changed')
-      player.removeListener('playback_error')
+      player.removeListener('player_state_changed', handleStateChange)
+      player.removeListener('playback_error', handlePlaybackError)
     }
-  }, [player, startTimers, isPlaying, clearTimers])
+  }, [player, startTimers, clearTimers])
 
   // Cleanup on unmount
   useEffect(() => {
