@@ -26,7 +26,7 @@ export function useSnippetPlayer(
   const currentTrackRef = useRef<SpotifyTrack | null>(null)
   const startPositionRef = useRef<number>(0)
   const timerRef = useRef<number | null>(null)
-  const progressIntervalRef = useRef<number | null>(null)
+  const rafRef = useRef<number | null>(null)
   const startTimeRef = useRef<number>(0)
   const pendingPlaybackRef = useRef<boolean>(false)
 
@@ -37,9 +37,9 @@ export function useSnippetPlayer(
       clearTimeout(timerRef.current)
       timerRef.current = null
     }
-    if (progressIntervalRef.current) {
-      clearInterval(progressIntervalRef.current)
-      progressIntervalRef.current = null
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current)
+      rafRef.current = null
     }
   }, [])
 
@@ -61,12 +61,16 @@ export function useSnippetPlayer(
   const startTimers = useCallback(() => {
     startTimeRef.current = Date.now()
 
-    // Progress update every 100ms
-    progressIntervalRef.current = window.setInterval(() => {
+    // Progress update via requestAnimationFrame for smoother animation
+    const updateProgress = () => {
       const elapsed = Date.now() - startTimeRef.current
       const pct = Math.min(100, (elapsed / durationMs) * 100)
       setProgress(pct)
-    }, 100)
+      if (elapsed < durationMs) {
+        rafRef.current = requestAnimationFrame(updateProgress)
+      }
+    }
+    rafRef.current = requestAnimationFrame(updateProgress)
 
     // Auto-stop after duration
     timerRef.current = window.setTimeout(async () => {
@@ -138,7 +142,7 @@ export function useSnippetPlayer(
 
     player.addListener('player_state_changed', handleStateChange)
     return () => {
-      player.removeListener('player_state_changed', handleStateChange)
+      player.removeListener('player_state_changed')
     }
   }, [player, startTimers])
 

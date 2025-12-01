@@ -17,7 +17,7 @@ declare namespace Spotify {
     addListener(event: 'authentication_error', callback: (error: ErrorState) => void): void
     addListener(event: 'account_error', callback: (error: ErrorState) => void): void
     addListener(event: 'playback_error', callback: (error: ErrorState) => void): void
-    removeListener(event: string, callback?: (state: unknown) => void): void
+    removeListener(event: string): void
     getCurrentState(): Promise<PlaybackState | null>
     setVolume(volume: number): Promise<void>
     pause(): Promise<void>
