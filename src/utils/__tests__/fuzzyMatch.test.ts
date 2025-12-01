@@ -22,7 +22,12 @@ describe('normalizeString', () => {
 
   it('removes punctuation', () => {
     expect(normalizeString('Mr. Brightside')).toBe('mr brightside')
-    expect(normalizeString('Rock & Roll')).toBe('rock roll') // spaces collapsed
+  })
+
+  it('normalizes & to "and"', () => {
+    expect(normalizeString('Rock & Roll')).toBe('rock and roll')
+    expect(normalizeString('Mumford & Sons')).toBe('mumford and sons')
+    expect(normalizeString('Simon&Garfunkel')).toBe('simon and garfunkel')
   })
 
   it('preserves internal apostrophes', () => {

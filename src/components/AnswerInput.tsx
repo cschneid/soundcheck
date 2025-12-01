@@ -14,11 +14,11 @@ export const AnswerInput = forwardRef<AnswerInputHandle, Props>(
   ({ onSubmit, disabled = false }, ref) => {
     const [artist, setArtist] = useState('')
     const [title, setTitle] = useState('')
-    const artistInputRef = useRef<HTMLInputElement>(null)
+    const titleInputRef = useRef<HTMLInputElement>(null)
 
     useImperativeHandle(ref, () => ({
       focus: () => {
-        artistInputRef.current?.focus()
+        titleInputRef.current?.focus()
       },
       clear: () => {
         setArtist('')
@@ -42,38 +42,38 @@ export const AnswerInput = forwardRef<AnswerInputHandle, Props>(
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label
-            htmlFor="artist-input"
-            className="block text-sm font-medium text-gray-300 mb-1"
-          >
-            Artist
-          </label>
-          <input
-            ref={artistInputRef}
-            id="artist-input"
-            type="text"
-            value={artist}
-            onChange={(e) => setArtist(e.target.value)}
-            disabled={disabled}
-            placeholder="Enter artist name"
-            className="w-full px-4 py-2 bg-[var(--bg-elevated)] border border-[var(--bg-elevated)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-secondary)] transition-default focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
-          />
-        </div>
-
-        <div>
-          <label
             htmlFor="title-input"
             className="block text-sm font-medium text-gray-300 mb-1"
           >
             Song Title
           </label>
           <input
+            ref={titleInputRef}
             id="title-input"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            onKeyDown={handleKeyDown}
             disabled={disabled}
             placeholder="Enter song title"
+            className="w-full px-4 py-2 bg-[var(--bg-elevated)] border border-[var(--bg-elevated)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-secondary)] transition-default focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="artist-input"
+            className="block text-sm font-medium text-gray-300 mb-1"
+          >
+            Artist
+          </label>
+          <input
+            id="artist-input"
+            type="text"
+            value={artist}
+            onChange={(e) => setArtist(e.target.value)}
+            onKeyDown={handleKeyDown}
+            disabled={disabled}
+            placeholder="Enter artist name"
             className="w-full px-4 py-2 bg-[var(--bg-elevated)] border border-[var(--bg-elevated)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-secondary)] transition-default focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
           />
         </div>

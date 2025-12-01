@@ -40,13 +40,13 @@ describe('AnswerInput', () => {
     expect(onSubmit).toHaveBeenCalledWith('', '')
   })
 
-  it('submits on Enter in title field', async () => {
+  it('submits on Enter in artist field', async () => {
     const onSubmit = vi.fn()
     const user = userEvent.setup()
     render(<AnswerInput onSubmit={onSubmit} />)
 
-    await user.type(screen.getByLabelText('Artist'), 'Queen')
-    await user.type(screen.getByLabelText('Song Title'), 'Bohemian Rhapsody{enter}')
+    await user.type(screen.getByLabelText('Song Title'), 'Bohemian Rhapsody')
+    await user.type(screen.getByLabelText('Artist'), 'Queen{enter}')
 
     expect(onSubmit).toHaveBeenCalledWith('Queen', 'Bohemian Rhapsody')
   })
@@ -70,13 +70,13 @@ describe('AnswerInput', () => {
     expect(screen.getByLabelText('Song Title')).toHaveValue('')
   })
 
-  it('focuses artist input via ref.focus()', () => {
+  it('focuses title input via ref.focus()', () => {
     const ref = createRef<AnswerInputHandle>()
     render(<AnswerInput ref={ref} onSubmit={vi.fn()} />)
 
     ref.current?.focus()
 
-    expect(screen.getByLabelText('Artist')).toHaveFocus()
+    expect(screen.getByLabelText('Song Title')).toHaveFocus()
   })
 
   it('disables inputs when disabled prop true', () => {

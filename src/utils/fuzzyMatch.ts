@@ -17,8 +17,9 @@ export interface MatchOptions {
  * 1. Trim whitespace
  * 2. Convert to lowercase
  * 3. Normalize -in' endings to -ing (walkin' -> walking)
- * 4. Remove punctuation (except internal apostrophes)
- * 5. Collapse multiple spaces
+ * 4. Normalize & to "and"
+ * 5. Remove punctuation (except internal apostrophes)
+ * 6. Collapse multiple spaces
  */
 export function normalizeString(str: string): string {
   return str
@@ -26,6 +27,8 @@ export function normalizeString(str: string): string {
     .toLowerCase()
     // Normalize -in' endings to -ing (walkin' -> walking, lovin' -> loving)
     .replace(/in'(?=\s|$)/g, 'ing')
+    // Normalize & to "and" (Mumford & Sons -> Mumford and Sons)
+    .replace(/\s*&\s*/g, ' and ')
     .replace(/[^\w\s']/g, '') // remove punctuation except apostrophe
     .replace(/\s+/g, ' ') // collapse multiple spaces
 }

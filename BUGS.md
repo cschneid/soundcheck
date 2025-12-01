@@ -13,6 +13,22 @@
 - Extra space hurts similarity score
 - Could add spaceless comparison as secondary check
 
+### ~~"&" not matching "and"~~ (Fixed in [033])
+- Target: "Mumford & Sons"
+- User: "mumford and sons" → marked wrong
+- Fixed: normalizeString now converts "&" to "and"
+
+### "ft." not matching comma-separated artists
+- Target: "Eve, Gwen Stefani"
+- User: "eve ft. gwen stefani" → marked wrong
+- "ft." / "feat." / "featuring" should match comma/ampersand separators
+
+### Partial title matches not recognized
+- Target: "Let Me Blow Ya Mind"
+- User: "blow ya mind" → marked wrong
+- Missing prefix words, but core title is correct
+- Could check if answer is substring of target (with length threshold)
+
 ## Track Availability
 
 ### ~~Unavailable tracks play as silence~~ (Fixed in [028])
