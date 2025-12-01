@@ -29,8 +29,10 @@ export function useSnippetPlayer(
   const rafRef = useRef<number | null>(null)
   const startTimeRef = useRef<number>(0)
   const pendingPlaybackRef = useRef<boolean>(false)
+  const playbackTimeoutRef = useRef<number | null>(null)
 
   const durationMs = durationSeconds * 1000
+  const PLAYBACK_TIMEOUT_MS = 5000 // 5 seconds to detect playback failure
 
   const clearTimers = useCallback(() => {
     if (timerRef.current) {
@@ -40,6 +42,10 @@ export function useSnippetPlayer(
     if (rafRef.current) {
       cancelAnimationFrame(rafRef.current)
       rafRef.current = null
+    }
+    if (playbackTimeoutRef.current) {
+      clearTimeout(playbackTimeoutRef.current)
+      playbackTimeoutRef.current = null
     }
   }, [])
 
@@ -100,15 +106,23 @@ export function useSnippetPlayer(
         if (!player) {
           pendingPlaybackRef.current = false
           startTimers()
+        } else {
+          // Set timeout to detect if playback never starts
+          playbackTimeoutRef.current = window.setTimeout(() => {
+            if (pendingPlaybackRef.current) {
+              pendingPlaybackRef.current = false
+              setError('Track failed to play - may be unavailable')
+              setIsPlaying(false)
+            }
+          }, PLAYBACK_TIMEOUT_MS)
         }
-        // Otherwise, timers start when player_state_changed fires (see useEffect below)
       } catch (err) {
         pendingPlaybackRef.current = false
         setError(err instanceof Error ? err.message : 'Playback failed')
         setIsPlaying(false)
       }
     },
-    [accessToken, deviceId, player, clearTimers, startTimers]
+    [accessToken, deviceId, player, clearTimers, startTimers, PLAYBACK_TIMEOUT_MS]
   )
 
   const play = useCallback(
@@ -136,15 +150,31 @@ export function useSnippetPlayer(
     const handleStateChange = (state: Spotify.PlaybackState | null) => {
       if (state && !state.paused && pendingPlaybackRef.current) {
         pendingPlaybackRef.current = false
+        // Clear the timeout since playback started successfully
+        if (playbackTimeoutRef.current) {
+          clearTimeout(playbackTimeoutRef.current)
+          playbackTimeoutRef.current = null
+        }
         startTimers()
       }
     }
 
+    const handlePlaybackError = ({ message }: Spotify.ErrorState) => {
+      if (pendingPlaybackRef.current || isPlaying) {
+        pendingPlaybackRef.current = false
+        clearTimers()
+        setError(`Playback error: ${message}`)
+        setIsPlaying(false)
+      }
+    }
+
     player.addListener('player_state_changed', handleStateChange)
+    player.addListener('playback_error', handlePlaybackError)
     return () => {
       player.removeListener('player_state_changed')
+      player.removeListener('playback_error')
     }
-  }, [player, startTimers])
+  }, [player, startTimers, isPlaying, clearTimers])
 
   // Cleanup on unmount
   useEffect(() => {

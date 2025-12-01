@@ -187,4 +187,48 @@ describe('isPlayableTrack', () => {
 
     expect(isPlayableTrack(track)).toBe(false)
   })
+
+  it('returns true when is_playable is true', () => {
+    const track = {
+      id: '1',
+      name: 'Test',
+      uri: 'spotify:track:abc',
+      is_playable: true,
+    } as SpotifyTrack
+
+    expect(isPlayableTrack(track)).toBe(true)
+  })
+
+  it('returns false when is_playable is false', () => {
+    const track = {
+      id: '1',
+      name: 'Test',
+      uri: 'spotify:track:abc',
+      is_playable: false,
+    } as SpotifyTrack
+
+    expect(isPlayableTrack(track)).toBe(false)
+  })
+
+  it('returns false when available_markets is empty (is_playable missing)', () => {
+    const track = {
+      id: '1',
+      name: 'Test',
+      uri: 'spotify:track:abc',
+      available_markets: [],
+    } as SpotifyTrack
+
+    expect(isPlayableTrack(track)).toBe(false)
+  })
+
+  it('returns true when available_markets is non-empty (is_playable missing)', () => {
+    const track = {
+      id: '1',
+      name: 'Test',
+      uri: 'spotify:track:abc',
+      available_markets: ['US', 'GB'],
+    } as SpotifyTrack
+
+    expect(isPlayableTrack(track)).toBe(true)
+  })
 })

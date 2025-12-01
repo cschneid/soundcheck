@@ -15,12 +15,11 @@
 
 ## Track Availability
 
-### Unavailable tracks play as silence
-- Tracks removed from Spotify but still in playlists are selectable
-- They play as silent/empty audio
-- Need to filter using `is_playable` field with `market` parameter
-- See: https://developer.spotify.com/documentation/web-api/concepts/track-relinking
-- Note: `is_playable` can be unreliable per https://github.com/spotify/web-api/issues/1033
+### ~~Unavailable tracks play as silence~~ (Fixed in [028])
+- ~~Tracks removed from Spotify but still in playlists are selectable~~
+- ~~They play as silent/empty audio~~
+- Fixed: Added `market=from_token` to playlist tracks request, filtering on `is_playable` with `available_markets` fallback
+- Refs: https://developer.spotify.com/documentation/web-api/concepts/track-relinking
 
 ## Game Flow
 

@@ -60,7 +60,8 @@ export class SpotifyClient {
     maxTracks: number = 500
   ): Promise<SpotifyTrack[]> {
     const tracks: SpotifyTrack[] = []
-    let url: string | null = `/playlists/${playlistId}/tracks?limit=100`
+    // market=from_token enables is_playable field for track availability
+    let url: string | null = `/playlists/${playlistId}/tracks?limit=100&market=from_token`
 
     while (url && tracks.length < maxTracks) {
       const response = await this.fetch<SpotifyPlaylistTracksResponse>(url)
@@ -107,11 +108,23 @@ export class SpotifyClient {
 }
 
 function isPlayableTrack(track: SpotifyTrack | null): track is SpotifyTrack {
-  return (
-    track !== null &&
-    !track.is_local &&
-    track.uri.startsWith('spotify:track:')
-  )
+  if (track === null || track.is_local || !track.uri.startsWith('spotify:track:')) {
+    return false
+  }
+
+  // Check is_playable if present (from market=from_token)
+  if (track.is_playable !== undefined) {
+    return track.is_playable
+  }
+
+  // Fallback: is_playable can be unreliable/missing, check available_markets
+  // If available_markets exists and is empty, track is unavailable
+  if (track.available_markets !== undefined) {
+    return track.available_markets.length > 0
+  }
+
+  // If neither field present, assume playable (legacy behavior)
+  return true
 }
 
 // Export for testing

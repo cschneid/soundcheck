@@ -27,6 +27,10 @@ export interface SpotifyTrack {
   duration_ms: number
   uri: string
   is_local?: boolean
+  // When market param is provided, is_playable replaces available_markets
+  // But is_playable can be unreliable (sometimes missing) per github.com/spotify/web-api/issues/1033
+  is_playable?: boolean
+  available_markets?: string[]
 }
 
 export interface SpotifyPlaylist {
