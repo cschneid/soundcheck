@@ -55,16 +55,20 @@ export class SpotifyClient {
     return this.fetch<SpotifyPlaylist>(`/playlists/${playlistId}`)
   }
 
-  async getPlaylistTracks(playlistId: string): Promise<SpotifyTrack[]> {
+  async getPlaylistTracks(
+    playlistId: string,
+    maxTracks: number = 500
+  ): Promise<SpotifyTrack[]> {
     const tracks: SpotifyTrack[] = []
     let url: string | null = `/playlists/${playlistId}/tracks?limit=100`
 
-    while (url) {
+    while (url && tracks.length < maxTracks) {
       const response = await this.fetch<SpotifyPlaylistTracksResponse>(url)
 
       for (const item of response.items) {
         if (isPlayableTrack(item.track)) {
           tracks.push(item.track)
+          if (tracks.length >= maxTracks) break
         }
       }
 
