@@ -23,7 +23,7 @@
 
 ## Game Flow
 
-### URL playlist lost on "Play Again"
-- User pastes playlist URL to start game
-- After game ends, clicking "Play Again" loses the playlist
-- Expected: should remember the playlist and restart with it
+### ~~URL playlist lost on "Play Again"~~ (Fixed in [027])
+- ~~User pastes playlist URL to start game~~
+- ~~After game ends, clicking "Play Again" loses the playlist~~
+- Fixed: Two-phase setup flow properly retains playlist after "Play Again"
