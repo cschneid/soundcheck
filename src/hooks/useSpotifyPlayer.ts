@@ -43,7 +43,7 @@ export function useSpotifyPlayer(accessToken: string | null): UseSpotifyPlayerRe
         if (!isMounted) return
 
         const player = new window.Spotify.Player({
-          name: 'Spotify Trainer',
+          name: 'SoundCheck',
           getOAuthToken: getToken,
           volume: 0.5,
         })

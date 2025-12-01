@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { PlaylistList } from './PlaylistList'
 import { PlaylistInput } from './PlaylistInput'
+import { SuggestedPlaylists } from './SuggestedPlaylists'
 import type { SpotifyPlaylist } from '../types/spotify'
 
-type Tab = 'my-playlists' | 'enter-url'
+type Tab = 'my-playlists' | 'suggestions' | 'enter-url'
 
 interface Props {
   playlists: SpotifyPlaylist[]
@@ -34,6 +35,12 @@ export function PlaylistPicker({
           My Playlists
         </TabButton>
         <TabButton
+          active={activeTab === 'suggestions'}
+          onClick={() => setActiveTab('suggestions')}
+        >
+          Suggestions
+        </TabButton>
+        <TabButton
           active={activeTab === 'enter-url'}
           onClick={() => setActiveTab('enter-url')}
         >
@@ -48,6 +55,14 @@ export function PlaylistPicker({
           selectedId={selectedId}
           isLoading={playlistsLoading}
           error={playlistsError}
+        />
+      )}
+
+      {activeTab === 'suggestions' && (
+        <SuggestedPlaylists
+          accessToken={accessToken}
+          onSelect={onSelect}
+          selectedId={selectedId}
         />
       )}
 

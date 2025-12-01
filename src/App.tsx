@@ -73,7 +73,7 @@ function App() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-[var(--accent)] mb-4">
-            Spotify Trainer
+            SoundCheck
           </h1>
           <p className="text-gray-400 mb-8">
             Train for bar trivia with your Spotify playlists
@@ -93,7 +93,7 @@ function App() {
       <div className="max-w-4xl mx-auto">
         <header className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-[var(--accent)]">Spotify Trainer</h1>
+            <h1 className="text-2xl font-bold text-[var(--accent)]">SoundCheck</h1>
             <p className="text-gray-400 text-sm">
               Welcome{user?.display_name ? `, ${user.display_name}` : ''}
               {playerReady && (
