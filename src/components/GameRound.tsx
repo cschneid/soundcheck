@@ -24,6 +24,8 @@ interface Props {
   onSubmit: (result: RoundResult) => void
   onNext: () => void
   isLastRound: boolean
+  onPlayAgain: () => void
+  onNewPlaylist: () => void
 }
 
 export function GameRound({
@@ -35,10 +37,13 @@ export function GameRound({
   onSubmit,
   onNext,
   isLastRound,
+  onPlayAgain,
+  onNewPlaylist,
 }: Props) {
   const answerInputRef = useRef<AnswerInputHandle>(null)
   const [answerSubmitted, setAnswerSubmitted] = useState(false)
   const [roundResult, setRoundResult] = useState<RoundResult | null>(null)
+  const [showAbandon, setShowAbandon] = useState(false)
 
   // Reset state when track changes (new round)
   useEffect(() => {
@@ -148,6 +153,42 @@ export function GameRound({
           />
         </div>
       )}
+
+      {/* Abandon game */}
+      <div className="mt-8 pt-4 border-t border-[var(--bg-elevated)]">
+        {!showAbandon ? (
+          <button
+            onClick={() => setShowAbandon(true)}
+            className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm transition-default"
+          >
+            Abandon Game
+          </button>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm text-gray-400">End this game?</p>
+            <div className="flex gap-3">
+              <button
+                onClick={onPlayAgain}
+                className="px-4 py-2 bg-[var(--accent)] text-black rounded-lg font-medium hover:bg-[var(--accent-hover)] transition-default focus-ring text-sm"
+              >
+                Restart
+              </button>
+              <button
+                onClick={onNewPlaylist}
+                className="px-4 py-2 bg-[var(--bg-elevated)] text-[var(--text-primary)] rounded-lg font-medium hover:opacity-90 transition-default focus-ring text-sm"
+              >
+                New Playlist
+              </button>
+              <button
+                onClick={() => setShowAbandon(false)}
+                className="px-4 py-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-default text-sm"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

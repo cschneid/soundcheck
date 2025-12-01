@@ -44,19 +44,6 @@ export function ResultFeedback({ result, track, onNext, isLastRound }: Props) {
             <div className="flex items-center gap-2">
               <span
                 className={`text-lg ${
-                  result.artistCorrect ? 'text-[var(--success)]' : 'text-[var(--error)]'
-                }`}
-                aria-label={result.artistCorrect ? 'correct' : 'incorrect'}
-              >
-                {result.artistCorrect ? '✓' : '✗'}
-              </span>
-              <span className="text-gray-400">Artist:</span>
-              <span className="text-white">{result.artistAnswer || '(no guess)'}</span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span
-                className={`text-lg ${
                   result.titleCorrect ? 'text-[var(--success)]' : 'text-[var(--error)]'
                 }`}
                 aria-label={result.titleCorrect ? 'correct' : 'incorrect'}
@@ -65,6 +52,19 @@ export function ResultFeedback({ result, track, onNext, isLastRound }: Props) {
               </span>
               <span className="text-gray-400">Title:</span>
               <span className="text-white">{result.titleAnswer || '(no guess)'}</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span
+                className={`text-lg ${
+                  result.artistCorrect ? 'text-[var(--success)]' : 'text-[var(--error)]'
+                }`}
+                aria-label={result.artistCorrect ? 'correct' : 'incorrect'}
+              >
+                {result.artistCorrect ? '✓' : '✗'}
+              </span>
+              <span className="text-gray-400">Artist:</span>
+              <span className="text-white">{result.artistAnswer || '(no guess)'}</span>
             </div>
           </div>
 

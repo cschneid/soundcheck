@@ -197,6 +197,8 @@ function App() {
             onSubmit={handleRoundSubmit}
             onNext={nextRound}
             isLastRound={isLastRound}
+            onPlayAgain={handlePlayAgain}
+            onNewPlaylist={handleNewPlaylist}
           />
         )}
 
