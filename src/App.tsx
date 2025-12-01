@@ -27,11 +27,12 @@ function App() {
     accessToken
   )
   const { state: gameState, startGame, resetGame, submitAnswer, nextRound, currentTrack, score, isLastRound } = useGameState()
-  const { deviceId, isReady: playerReady, error: playerError } = useSpotifyPlayer(accessToken)
+  const { player, deviceId, isReady: playerReady, error: playerError } = useSpotifyPlayer(accessToken)
   const snippetPlayer = useSnippetPlayer(
     accessToken,
     deviceId,
-    gameState.settings.snippetDuration
+    gameState.settings.snippetDuration,
+    player
   )
 
   const handlePlaylistSelect = (playlist: SpotifyPlaylist) => {
