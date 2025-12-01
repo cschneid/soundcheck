@@ -21,7 +21,6 @@ function App() {
   const { isLoading: premiumLoading, isPremium, user } = usePremiumCheck(accessToken)
   const { playlists, isLoading: playlistsLoading, error: playlistsError } = usePlaylists(accessToken)
   const [selectedPlaylist, setSelectedPlaylist] = useState<SpotifyPlaylist | null>(null)
-  const [showSettings, setShowSettings] = useState(false)
   const { tracks, isLoading: tracksLoading, error: tracksError } = usePlaylistTracks(
     selectedPlaylist?.id ?? null,
     accessToken
@@ -37,19 +36,10 @@ function App() {
 
   const handlePlaylistSelect = (playlist: SpotifyPlaylist) => {
     setSelectedPlaylist(playlist)
-    setShowSettings(false)
-  }
-
-  const handleConfigureGame = () => {
-    setShowSettings(true)
   }
 
   const handleStartGame = (settings: GameSettingsType) => {
     startGame(tracks, settings)
-  }
-
-  const handleBackToPlaylist = () => {
-    setShowSettings(false)
   }
 
   const handleRoundSubmit = (result: RoundResult) => {
@@ -57,15 +47,12 @@ function App() {
   }
 
   const handlePlayAgain = () => {
-    // Reset game but keep same playlist - will restart with same tracks
     resetGame()
-    setShowSettings(true)
   }
 
   const handleNewPlaylist = () => {
     resetGame()
     setSelectedPlaylist(null)
-    setShowSettings(false)
   }
 
   // Auto-play snippet when game starts or round changes
@@ -125,7 +112,8 @@ function App() {
           </button>
         </header>
 
-        {gameState.phase === 'setup' && (
+        {/* Phase 1: Playlist Selection (only shown when no playlist selected) */}
+        {gameState.phase === 'setup' && !selectedPlaylist && (
           <section>
             <h2 className="text-lg font-semibold text-white mb-4">
               Select a playlist
@@ -141,62 +129,62 @@ function App() {
           </section>
         )}
 
+        {/* Playing indicator (during game) */}
         {gameState.phase !== 'setup' && selectedPlaylist && (
           <div className="mb-4 text-gray-400">
             Playing: <span className="text-white font-medium">{selectedPlaylist.name}</span>
           </div>
         )}
 
-        {selectedPlaylist && !showSettings && gameState.phase === 'setup' && (
-          <div className="mt-8 p-4 bg-[var(--bg-secondary)] rounded-lg">
-            <p className="text-white">
-              Selected: <strong>{selectedPlaylist.name}</strong>
-            </p>
-            {tracksLoading && (
-              <p className="text-gray-400 mt-2">Loading tracks...</p>
-            )}
+        {/* Phase 2: Game Configuration (shown after playlist selected) */}
+        {selectedPlaylist && gameState.phase === 'setup' && (
+          <section>
+            {/* Selected playlist summary */}
+            <div className="mb-6 p-4 bg-[var(--bg-secondary)] rounded-lg flex items-center justify-between">
+              <div>
+                <p className="text-gray-400 text-sm">Selected playlist</p>
+                <p className="text-white font-semibold">{selectedPlaylist.name}</p>
+                {tracksLoading && (
+                  <p className="text-gray-400 text-sm mt-1">Loading tracks...</p>
+                )}
+                {!tracksLoading && !tracksError && tracks.length > 0 && (
+                  <p className="text-gray-400 text-sm mt-1">{tracks.length} playable tracks</p>
+                )}
+              </div>
+              <button
+                onClick={() => setSelectedPlaylist(null)}
+                className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm underline transition-default"
+              >
+                Change
+              </button>
+            </div>
+
+            {/* Error states */}
             {tracksError && (
-              <p className="text-[var(--error)] mt-2">{tracksError}</p>
+              <div className="mb-6 p-4 bg-[var(--error)]/10 border border-[var(--error)]/30 rounded-lg">
+                <p className="text-[var(--error)]">{tracksError}</p>
+              </div>
             )}
-            {!tracksLoading && !tracksError && tracks.length > 0 && (
-              <>
-                <p className="text-gray-400 mt-2">
-                  {tracks.length} playable tracks
-                </p>
-                <button
-                  onClick={handleConfigureGame}
-                  className="mt-4 px-6 py-2 bg-[var(--accent)] text-black rounded-full font-semibold hover:bg-[var(--accent-hover)] active:scale-95 transition-default focus-ring"
-                >
-                  Configure Game
-                </button>
-              </>
-            )}
+
             {!tracksLoading && !tracksError && tracks.length === 0 && (
-              <div className="mt-4 p-4 bg-[var(--error)]/10 border border-[var(--error)]/30 rounded-lg">
+              <div className="mb-6 p-4 bg-[var(--error)]/10 border border-[var(--error)]/30 rounded-lg">
                 <p className="text-[var(--error)] font-medium">No playable tracks</p>
                 <p className="text-[var(--text-secondary)] text-sm mt-1">
                   This playlist may only contain local files or unavailable tracks.
                 </p>
-                <button
-                  onClick={() => setSelectedPlaylist(null)}
-                  className="mt-3 px-4 py-1.5 text-sm bg-[var(--bg-elevated)] text-[var(--text-primary)] rounded hover:opacity-80 transition-default"
-                >
-                  Choose Another Playlist
-                </button>
               </div>
             )}
-          </div>
-        )}
 
-        {selectedPlaylist && showSettings && gameState.phase === 'setup' && (
-          <div className="mt-8">
-            <GameSettings
-              playlist={selectedPlaylist}
-              availableTrackCount={tracks.length}
-              onStart={handleStartGame}
-              onBack={handleBackToPlaylist}
-            />
-          </div>
+            {/* Game settings (show when tracks loaded successfully) */}
+            {!tracksLoading && !tracksError && tracks.length > 0 && (
+              <GameSettings
+                playlist={selectedPlaylist}
+                availableTrackCount={tracks.length}
+                onStart={handleStartGame}
+                onBack={() => setSelectedPlaylist(null)}
+              />
+            )}
+          </section>
         )}
 
         {gameState.phase === 'playing' && currentTrack && (
