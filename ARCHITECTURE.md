@@ -54,7 +54,7 @@ src/
        │                                      │
        │                                      ▼
        │                          ┌───────────────────┐
-       │                          │  sessionStorage   │
+       │                          │   localStorage    │
        │                          │  - spotify_auth   │
        │                          │  - code_verifier  │
        │                          └───────────────────┘
@@ -100,7 +100,7 @@ src/
 
 ### Token Storage
 
-- **Location**: `sessionStorage` (cleared on tab close)
+- **Location**: `localStorage` (persists across sessions)
 - **Key**: `spotify_auth`
 - **Format**: `{ accessToken: string, expiresAt: number }`
 - **Expiry buffer**: 60 seconds before actual expiry
