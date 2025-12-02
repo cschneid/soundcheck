@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { SpotifyClient, isPlayableTrack } from '../spotify'
-import { SpotifyError, SpotifyTrack } from '../../types/spotify'
+import { SpotifyError } from '../../types/spotify'
+import type { SpotifyTrack } from '../../types/spotify'
 
 const mockFetch = vi.fn()
-global.fetch = mockFetch
+globalThis.fetch = mockFetch
 
 function mockResponse(data: unknown, ok = true, status = 200) {
   return {
@@ -215,6 +216,9 @@ describe('isPlayableTrack', () => {
       id: '1',
       name: 'Test',
       uri: 'spotify:track:abc',
+      artists: [],
+      album: { name: '', images: [] },
+      duration_ms: 0,
       available_markets: [],
     } as SpotifyTrack
 

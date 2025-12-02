@@ -30,8 +30,8 @@ export function usePlaylistTracks(
       setError(null)
 
       try {
-        const client = new SpotifyClient(accessToken)
-        const result = await client.getPlaylistTracks(playlistId)
+        const client = new SpotifyClient(accessToken!)
+        const result = await client.getPlaylistTracks(playlistId!)
 
         if (!cancelled) {
           setTracks(result)

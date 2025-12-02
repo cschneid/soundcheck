@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import { SpotifyClient } from '../utils/spotify'
 import { getRandomStartPosition } from '../utils/snippetPosition'
 import type { SpotifyTrack } from '../types/spotify'
-import '../types/spotify-sdk.d.ts'
+import type { SpotifyPlayer, SpotifyPlaybackState, SpotifyErrorState } from '../types/spotify-sdk'
 
 export interface UseSnippetPlayerReturn {
   play: (track: SpotifyTrack) => Promise<void>
@@ -17,7 +17,7 @@ export function useSnippetPlayer(
   accessToken: string | null,
   deviceId: string | null,
   durationSeconds: number,
-  player: Spotify.Player | null = null
+  player: SpotifyPlayer | null = null
 ): UseSnippetPlayerReturn {
   const [isPlaying, setIsPlaying] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -152,7 +152,7 @@ export function useSnippetPlayer(
   useEffect(() => {
     if (!player) return
 
-    const handleStateChange = (state: Spotify.PlaybackState | null) => {
+    const handleStateChange = (state: SpotifyPlaybackState | null) => {
       if (state && !state.paused && pendingPlaybackRef.current) {
         pendingPlaybackRef.current = false
         // Clear the timeout since playback started successfully
@@ -164,7 +164,7 @@ export function useSnippetPlayer(
       }
     }
 
-    const handlePlaybackError = ({ message }: Spotify.ErrorState) => {
+    const handlePlaybackError = ({ message }: SpotifyErrorState) => {
       if (pendingPlaybackRef.current || isPlayingRef.current) {
         pendingPlaybackRef.current = false
         clearTimers()

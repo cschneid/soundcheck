@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { loadSpotifySDK } from '../utils/loadSpotifySDK'
-import '../types/spotify-sdk.d.ts'
+import type { SpotifyPlayer } from '../types/spotify-sdk'
 
 export interface UseSpotifyPlayerReturn {
-  player: Spotify.Player | null
+  player: SpotifyPlayer | null
   deviceId: string | null
   isReady: boolean
   error: string | null
@@ -13,7 +13,7 @@ export function useSpotifyPlayer(accessToken: string | null): UseSpotifyPlayerRe
   const [deviceId, setDeviceId] = useState<string | null>(null)
   const [isReady, setIsReady] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const playerRef = useRef<Spotify.Player | null>(null)
+  const playerRef = useRef<SpotifyPlayer | null>(null)
 
   const getToken = useCallback(
     (cb: (token: string) => void) => {

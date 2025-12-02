@@ -124,7 +124,7 @@ function App() {
               playlistsError={playlistsError}
               accessToken={accessToken!}
               onSelect={handlePlaylistSelect}
-              selectedId={selectedPlaylist?.id}
+              selectedId={undefined}
             />
           </section>
         )}

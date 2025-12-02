@@ -28,7 +28,7 @@ export function usePremiumCheck(accessToken: string | null): PremiumCheckResult 
       setError(null)
 
       try {
-        const client = new SpotifyClient(accessToken)
+        const client = new SpotifyClient(accessToken!)
         const currentUser = await client.getCurrentUser()
         setUser(currentUser)
         setIsPremium(currentUser.product === 'premium')

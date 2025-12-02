@@ -10,7 +10,11 @@ import { SpotifyError } from '../types/spotify'
 const SPOTIFY_API_BASE = 'https://api.spotify.com/v1'
 
 export class SpotifyClient {
-  constructor(private accessToken: string) {}
+  private accessToken: string
+
+  constructor(accessToken: string) {
+    this.accessToken = accessToken
+  }
 
   private async fetch<T>(endpoint: string): Promise<T> {
     const url = endpoint.startsWith('http')
@@ -43,9 +47,9 @@ export class SpotifyClient {
     let url: string | null = '/me/playlists?limit=50'
 
     while (url) {
-      const response = await this.fetch<SpotifyPlaylistsResponse>(url)
-      playlists.push(...response.items)
-      url = response.next
+      const data: SpotifyPlaylistsResponse = await this.fetch<SpotifyPlaylistsResponse>(url)
+      playlists.push(...data.items)
+      url = data.next
     }
 
     return playlists
@@ -64,16 +68,16 @@ export class SpotifyClient {
     let url: string | null = `/playlists/${playlistId}/tracks?limit=100&market=from_token`
 
     while (url && tracks.length < maxTracks) {
-      const response = await this.fetch<SpotifyPlaylistTracksResponse>(url)
+      const data: SpotifyPlaylistTracksResponse = await this.fetch<SpotifyPlaylistTracksResponse>(url)
 
-      for (const item of response.items) {
+      for (const item of data.items) {
         if (isPlayableTrack(item.track)) {
           tracks.push(item.track)
           if (tracks.length >= maxTracks) break
         }
       }
 
-      url = response.next
+      url = data.next
     }
 
     return tracks

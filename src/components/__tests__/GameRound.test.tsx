@@ -26,6 +26,11 @@ const createSnippetPlayer = (overrides = {}) => ({
   ...overrides,
 })
 
+const defaultProps = {
+  onPlayAgain: vi.fn(),
+  onNewPlaylist: vi.fn(),
+}
+
 describe('GameRound', () => {
   it('displays round number and total', () => {
     render(
@@ -38,6 +43,7 @@ describe('GameRound', () => {
         onSubmit={vi.fn()}
         onNext={vi.fn()}
         isLastRound={false}
+        {...defaultProps}
       />
     )
 
@@ -55,6 +61,7 @@ describe('GameRound', () => {
         onSubmit={vi.fn()}
         onNext={vi.fn()}
         isLastRound={false}
+        {...defaultProps}
       />
     )
 
@@ -72,6 +79,7 @@ describe('GameRound', () => {
         onSubmit={vi.fn()}
         onNext={vi.fn()}
         isLastRound={false}
+        {...defaultProps}
       />
     )
 
@@ -89,6 +97,7 @@ describe('GameRound', () => {
         onSubmit={vi.fn()}
         onNext={vi.fn()}
         isLastRound={false}
+        {...defaultProps}
       />
     )
 
@@ -110,6 +119,7 @@ describe('GameRound', () => {
         onSubmit={onSubmit}
         onNext={vi.fn()}
         isLastRound={false}
+        {...defaultProps}
       />
     )
 
@@ -142,6 +152,7 @@ describe('GameRound', () => {
         onSubmit={vi.fn()}
         onNext={onNext}
         isLastRound={false}
+        {...defaultProps}
       />
     )
 
@@ -165,6 +176,7 @@ describe('GameRound', () => {
         onSubmit={vi.fn()}
         onNext={vi.fn()}
         isLastRound={false}
+        {...defaultProps}
       />
     )
 
@@ -182,6 +194,7 @@ describe('GameRound', () => {
         onSubmit={vi.fn()}
         onNext={vi.fn()}
         isLastRound={false}
+        {...defaultProps}
       />
     )
 
@@ -199,6 +212,7 @@ describe('GameRound', () => {
         onSubmit={vi.fn()}
         onNext={vi.fn()}
         isLastRound={false}
+        {...defaultProps}
       />
     )
 
@@ -218,6 +232,7 @@ describe('GameRound', () => {
         onSubmit={vi.fn()}
         onNext={vi.fn()}
         isLastRound={true}
+        {...defaultProps}
       />
     )
 
@@ -240,6 +255,7 @@ describe('GameRound', () => {
         onSubmit={vi.fn()}
         onNext={vi.fn()}
         isLastRound={false}
+        {...defaultProps}
       />
     )
 

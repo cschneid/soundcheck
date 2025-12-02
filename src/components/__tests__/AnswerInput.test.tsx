@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createRef } from 'react'
-import { AnswerInput, AnswerInputHandle } from '../AnswerInput'
+import { AnswerInput, type AnswerInputHandle } from '../AnswerInput'
 
 describe('AnswerInput', () => {
   it('renders two input fields', () => {

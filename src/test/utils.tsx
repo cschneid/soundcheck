@@ -1,5 +1,5 @@
-import { render, RenderOptions } from '@testing-library/react'
-import { ReactElement } from 'react'
+import { render, type RenderOptions } from '@testing-library/react'
+import type { ReactElement } from 'react'
 
 // Add providers here as needed (e.g., context providers)
 function AllTheProviders({ children }: { children: React.ReactNode }) {
