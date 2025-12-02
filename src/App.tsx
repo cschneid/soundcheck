@@ -13,6 +13,7 @@ import { GameSettings } from './components/GameSettings'
 import { GameRound } from './components/GameRound'
 import { EndScreen } from './components/EndScreen'
 import { LoadingSpinner } from './components/LoadingSpinner'
+import { Footer } from './components/Footer'
 import type { SpotifyPlaylist } from './types/spotify'
 import type { GameSettings as GameSettingsType, RoundResult } from './types/game'
 
@@ -65,31 +66,44 @@ function App() {
   const isLoading = authLoading || (isAuthenticated && premiumLoading)
 
   if (isLoading) {
-    return <LoadingSpinner message="Loading your profile..." />
+    return (
+      <div className="min-h-screen flex flex-col">
+        <LoadingSpinner message="Loading your profile..." />
+        <Footer />
+      </div>
+    )
   }
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-[var(--accent)] mb-4">
-            SoundCheck
-          </h1>
-          <p className="text-gray-400 mb-8">
-            Train for bar trivia with your Spotify playlists
-          </p>
-          <LoginButton onClick={login} />
+      <div className="min-h-screen flex flex-col">
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-[var(--accent)] mb-4">
+              SoundCheck
+            </h1>
+            <p className="text-gray-400 mb-8">
+              Train for bar trivia with your Spotify playlists
+            </p>
+            <LoginButton onClick={login} />
+          </div>
         </div>
+        <Footer />
       </div>
     )
   }
 
   if (!isPremium) {
-    return <PremiumRequired onLogout={logout} />
+    return (
+      <div className="min-h-screen flex flex-col">
+        <PremiumRequired onLogout={logout} />
+        <Footer />
+      </div>
+    )
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen flex flex-col p-8">
       <div className="max-w-4xl mx-auto">
         <header className="flex items-center justify-between mb-8">
           <div>
@@ -211,6 +225,7 @@ function App() {
           />
         )}
       </div>
+      <Footer />
     </div>
   )
 }
