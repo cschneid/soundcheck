@@ -27,7 +27,9 @@
       "mcp__chrome-devtools__get_console_message",
       "mcp__chrome-devtools__list_network_requests",
       "mcp__chrome-devtools__fill_form",
-      "Bash(git -C /Users/chrisschneider/Code/Personal/spotify-trainer log --oneline)"
+      "Bash(git -C /Users/chrisschneider/Code/Personal/spotify-trainer log --oneline)",
+      "Bash(npm run build:*)",
+      "Bash(git push)"
     ],
     "deny": [],
     "ask": []
