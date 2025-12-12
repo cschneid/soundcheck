@@ -6,6 +6,8 @@ interface Props {
   selectedId?: string
   isLoading?: boolean
   error?: string | null
+  emptyTitle?: string
+  emptySubtitle?: string
 }
 
 export function PlaylistList({
@@ -14,6 +16,8 @@ export function PlaylistList({
   selectedId,
   isLoading,
   error,
+  emptyTitle,
+  emptySubtitle,
 }: Props) {
   if (isLoading) {
     return (
@@ -34,9 +38,9 @@ export function PlaylistList({
   if (playlists.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-400">No playlists found</p>
+        <p className="text-gray-400">{emptyTitle ?? 'No playlists found'}</p>
         <p className="text-gray-500 text-sm mt-2">
-          Create some playlists in Spotify to get started
+          {emptySubtitle ?? 'Create some playlists in Spotify to get started'}
         </p>
       </div>
     )

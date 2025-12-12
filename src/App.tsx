@@ -83,9 +83,14 @@ function App() {
               SoundCheck
             </h1>
             <p className="text-gray-400 mb-8">
-              Train for bar trivia with your Spotify playlists
+              Practice music trivia by guessing 10-second Spotify snippets.
+              <br />
+              Pick a playlist, we’ll play random clips, and you guess artist + title.
             </p>
             <LoginButton onClick={login} />
+            <p className="mt-3 text-sm text-gray-500">
+              Login happens on Spotify. This project is frontend-only (no server).
+            </p>
           </div>
         </div>
         <Footer />
